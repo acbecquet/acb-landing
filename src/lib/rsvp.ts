@@ -6,7 +6,6 @@ export interface Rsvp {
   setSource(text: string, label: RsvpSource): void;
   play(): void;
   stop(): void;
-  readonly wordEl: HTMLElement;
 }
 
 const ALNUM = /[A-Za-z0-9]/g;
@@ -109,5 +108,5 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
     toggleBtn.textContent = shown ? "Hide text" : "Read it normally";
   });
 
-  return { setSource, play, stop, wordEl };
+  return { setSource, play, stop };
 }

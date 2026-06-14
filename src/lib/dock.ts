@@ -1,42 +1,37 @@
 // Scroll-LINKED anchored dock. As you scroll past the reader it pins under the nav and
-// every element's position/size is interpolated from its measured expanded spot to its
-// docked spot as a pure function of scroll position — no timed transition, no layout swap.
-//
-// Layout choices that keep the motion clean:
-//  - Play and the WPM slider already sit at the left/right edges (controls use
-//    space-between), so they only ever move VERTICALLY into the bar.
-//  - The word slides to the exact midpoint between Play's right edge and the slider's
-//    left edge, so the docked bar has even spacing on both sides.
-//  - The middle controls, the label, and the focal guide simply fade out.
+// collapses to a compact bar. Design rules (in priority order):
+//   1. The reader word NEVER moves horizontally and NEVER changes size — it is the fixed
+//      anchor. It only translates vertically as the box collapses around it.
+//   2. Play and the WPM slider are equal width at equal insets (set in CSS), so a
+//      card-centered word automatically has even gaps on both sides — symmetric.
+//   3. Play and the slider also only move vertically; the middle controls, label, and
+//      focal guide fade out.
+// Everything is a pure function of scroll position — no timed transition, no layout swap.
 
 const DOCK_TOP = 76;
-const DOCK_H = 62;
 const DURATION = 200; // scroll px over which the morph completes
-const WDOCK = 30; // docked playing-word font size
 
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
 const clamp01 = (t: number): number => (t < 0 ? 0 : t > 1 ? 1 : t);
 
 interface Rel {
-  cx: number;
   cy: number;
-  w: number;
 }
 interface Geo {
   home: number;
   H0: number;
+  dockH: number;
   play: Rel;
   wpm: Rel;
   stage: Rel;
-  wExp: number;
 }
 
-function rel(el: Element, c: DOMRect): Rel {
+function relCy(el: Element, c: DOMRect): Rel {
   const r = el.getBoundingClientRect();
-  return { cx: r.left - c.left + r.width / 2, cy: r.top - c.top + r.height / 2, w: r.width };
+  return { cy: r.top - c.top + r.height / 2 };
 }
 
-export function initDock(rsvpEl: HTMLElement, slot: HTMLElement, wordEl: HTMLElement): void {
+export function initDock(rsvpEl: HTMLElement, slot: HTMLElement): void {
   const stageEl = rsvpEl.querySelector<HTMLElement>(".stage")!;
   const guideEl = rsvpEl.querySelector<HTMLElement>(".guide")!;
   const labelEl = rsvpEl.querySelector<HTMLElement>(".label")!;
@@ -51,34 +46,28 @@ export function initDock(rsvpEl: HTMLElement, slot: HTMLElement, wordEl: HTMLEle
   function measure(): void {
     if (pinned) return; // measure only in the natural (expanded) state
     const c = rsvpEl.getBoundingClientRect();
+    const wordSize = Math.min(52, Math.max(30, 0.06 * window.innerWidth));
     geo = {
       home: c.top + window.scrollY - DOCK_TOP,
       H0: c.height,
-      play: rel(playBtn, c),
-      wpm: rel(sliderEl, c),
-      stage: rel(stageEl, c),
-      wExp: Math.min(52, Math.max(30, 0.06 * window.innerWidth)),
+      dockH: Math.round(wordSize + 20), // bar collapses to snugly fit the (unchanged) word
+      play: relCy(playBtn, c),
+      wpm: relCy(sliderEl, c),
+      stage: relCy(stageEl, c),
     };
   }
 
   function apply(g: Geo, p: number): void {
-    const cy = DOCK_H / 2;
-    rsvpEl.style.height = `${lerp(g.H0, DOCK_H, p)}px`;
-
-    // word: glide to the midpoint between the two controls (even gaps) + up to the bar center.
-    const wordCx = (g.play.cx + g.play.w / 2 + (g.wpm.cx - g.wpm.w / 2)) / 2;
-    stageEl.style.transform = `translate(${lerp(0, wordCx - g.stage.cx, p)}px,${lerp(0, cy - g.stage.cy, p)}px)`;
-
-    // Play & slider are already at the edges → vertical movement only.
+    const cy = g.dockH / 2;
+    rsvpEl.style.height = `${lerp(g.H0, g.dockH, p)}px`;
+    // Vertical movement only — nothing drifts left/right, the word keeps its size.
+    stageEl.style.transform = `translateY(${lerp(0, cy - g.stage.cy, p)}px)`;
     playBtn.style.transform = `translateY(${lerp(0, cy - g.play.cy, p)}px)`;
     sliderEl.style.transform = `translateY(${lerp(0, cy - g.wpm.cy, p)}px)`;
-
     labelEl.style.opacity = `${clamp01(1 - p * 2)}`;
     guideEl.style.opacity = `${clamp01(1 - p * 1.6)}`;
     midEl.style.opacity = `${clamp01(1 - p * 2.2)}`;
     midEl.style.pointerEvents = p > 0.4 ? "none" : "";
-
-    wordEl.style.fontSize = wordEl.classList.contains("idle") ? "" : `${lerp(g.wExp, WDOCK, p)}px`;
   }
 
   function reset(): void {
@@ -90,7 +79,6 @@ export function initDock(rsvpEl: HTMLElement, slot: HTMLElement, wordEl: HTMLEle
     guideEl.style.opacity = "";
     midEl.style.opacity = "";
     midEl.style.pointerEvents = "";
-    wordEl.style.fontSize = "";
   }
 
   function update(): void {

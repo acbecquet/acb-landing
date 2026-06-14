@@ -35,7 +35,7 @@ function main(): void {
   if (rsvpEl && slot) {
     const rsvp = createRsvp(rsvpEl, STORY);
     initHighlight(rsvp, rsvpEl);
-    initDock(rsvpEl, slot, rsvp.wordEl);
+    initDock(rsvpEl, slot);
   }
 
   balanceHeadlines(".balance");
