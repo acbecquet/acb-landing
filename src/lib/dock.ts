@@ -1,6 +1,13 @@
-// Scroll-LINKED anchored dock: as you scroll past the reader it pins under the nav and
-// every element's size/position is interpolated from its measured expanded spot to its
-// docked spot as a pure function of scroll position (no timed transition, no layout swap).
+// Scroll-LINKED anchored dock. As you scroll past the reader it pins under the nav and
+// every element's position/size is interpolated from its measured expanded spot to its
+// docked spot as a pure function of scroll position — no timed transition, no layout swap.
+//
+// Layout choices that keep the motion clean:
+//  - Play and the WPM slider already sit at the left/right edges (controls use
+//    space-between), so they only ever move VERTICALLY into the bar.
+//  - The word slides to the exact midpoint between Play's right edge and the slider's
+//    left edge, so the docked bar has even spacing on both sides.
+//  - The middle controls, the label, and the focal guide simply fade out.
 
 const DOCK_TOP = 76;
 const DOCK_H = 62;
@@ -18,7 +25,6 @@ interface Rel {
 interface Geo {
   home: number;
   H0: number;
-  cardW: number;
   play: Rel;
   wpm: Rel;
   stage: Rel;
@@ -35,9 +41,8 @@ export function initDock(rsvpEl: HTMLElement, slot: HTMLElement, wordEl: HTMLEle
   const guideEl = rsvpEl.querySelector<HTMLElement>(".guide")!;
   const labelEl = rsvpEl.querySelector<HTMLElement>(".label")!;
   const sliderEl = rsvpEl.querySelector<HTMLElement>(".slider")!;
+  const midEl = rsvpEl.querySelector<HTMLElement>(".controls-mid")!;
   const playBtn = rsvpEl.querySelector<HTMLElement>("#play")!;
-  const restartBtn = rsvpEl.querySelector<HTMLElement>("#restart")!;
-  const toggleBtn = rsvpEl.querySelector<HTMLElement>("#toggleFull")!;
 
   let geo: Geo | null = null;
   let pinned = false;
@@ -49,7 +54,6 @@ export function initDock(rsvpEl: HTMLElement, slot: HTMLElement, wordEl: HTMLEle
     geo = {
       home: c.top + window.scrollY - DOCK_TOP,
       H0: c.height,
-      cardW: c.width,
       play: rel(playBtn, c),
       wpm: rel(sliderEl, c),
       stage: rel(stageEl, c),
@@ -60,17 +64,20 @@ export function initDock(rsvpEl: HTMLElement, slot: HTMLElement, wordEl: HTMLEle
   function apply(g: Geo, p: number): void {
     const cy = DOCK_H / 2;
     rsvpEl.style.height = `${lerp(g.H0, DOCK_H, p)}px`;
-    stageEl.style.transform = `translateY(${lerp(0, cy - g.stage.cy, p)}px)`;
-    playBtn.style.transform = `translate(${lerp(0, 18 + g.play.w / 2 - g.play.cx, p)}px,${lerp(0, cy - g.play.cy, p)}px)`;
-    sliderEl.style.transform = `translate(${lerp(0, g.cardW - 18 - g.wpm.w / 2 - g.wpm.cx, p)}px,${lerp(0, cy - g.wpm.cy, p)}px)`;
+
+    // word: glide to the midpoint between the two controls (even gaps) + up to the bar center.
+    const wordCx = (g.play.cx + g.play.w / 2 + (g.wpm.cx - g.wpm.w / 2)) / 2;
+    stageEl.style.transform = `translate(${lerp(0, wordCx - g.stage.cx, p)}px,${lerp(0, cy - g.stage.cy, p)}px)`;
+
+    // Play & slider are already at the edges → vertical movement only.
+    playBtn.style.transform = `translateY(${lerp(0, cy - g.play.cy, p)}px)`;
+    sliderEl.style.transform = `translateY(${lerp(0, cy - g.wpm.cy, p)}px)`;
+
     labelEl.style.opacity = `${clamp01(1 - p * 2)}`;
     guideEl.style.opacity = `${clamp01(1 - p * 1.6)}`;
-    const f = `${clamp01(1 - p * 2.2)}`;
-    restartBtn.style.opacity = f;
-    toggleBtn.style.opacity = f;
-    const pe = p > 0.4 ? "none" : "";
-    restartBtn.style.pointerEvents = pe;
-    toggleBtn.style.pointerEvents = pe;
+    midEl.style.opacity = `${clamp01(1 - p * 2.2)}`;
+    midEl.style.pointerEvents = p > 0.4 ? "none" : "";
+
     wordEl.style.fontSize = wordEl.classList.contains("idle") ? "" : `${lerp(g.wExp, WDOCK, p)}px`;
   }
 
@@ -81,10 +88,8 @@ export function initDock(rsvpEl: HTMLElement, slot: HTMLElement, wordEl: HTMLEle
     sliderEl.style.transform = "";
     labelEl.style.opacity = "";
     guideEl.style.opacity = "";
-    restartBtn.style.opacity = "";
-    toggleBtn.style.opacity = "";
-    restartBtn.style.pointerEvents = "";
-    toggleBtn.style.pointerEvents = "";
+    midEl.style.opacity = "";
+    midEl.style.pointerEvents = "";
     wordEl.style.fontSize = "";
   }
 

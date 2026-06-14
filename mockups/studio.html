@@ -91,7 +91,8 @@
   .word .pre{text-align:right}.word .post{text-align:left}
   .word .piv{color:var(--accent);padding:0 .02em}
   .word.idle{font-size:20px;color:var(--faint);font-family:Inter,sans-serif;grid-template-columns:none;text-align:center}
-  .controls{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap;padding:16px}
+  .controls{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:16px 20px}
+  .controls-mid{display:flex;align-items:center;gap:18px}
   .btn{display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:none;
     background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;padding:11px 20px;border-radius:999px}
   .btn:hover{background:var(--accent);color:#fff}
@@ -201,9 +202,11 @@
     </div>
     <div class="controls">
       <button class="btn" id="play">▶ Play</button>
-      <button class="btn ghost" id="restart">↺ Restart</button>
+      <div class="controls-mid">
+        <button class="btn ghost" id="restart">↺ Restart</button>
+        <button class="btn ghost" id="toggleFull">Read it normally</button>
+      </div>
       <div class="slider"><span id="wpmLabel">350 wpm</span><input type="range" id="wpm" min="150" max="700" step="25" value="350" /></div>
-      <button class="btn ghost" id="toggleFull">Read it normally</button>
     </div>
     <div class="full" id="full"></div>
     <div class="rsvp-pad" style="height:14px"></div>
@@ -388,8 +391,7 @@
   const guideEl = rsvpEl.querySelector('.guide');
   const labelEl = rsvpEl.querySelector('.label');
   const sliderEl = rsvpEl.querySelector('.slider');
-  const restartBtn = document.getElementById('restart');
-  const toggleBtn = document.getElementById('toggleFull');
+  const midEl = rsvpEl.querySelector('.controls-mid');
   const DOCK_TOP = 76, DOCK_H = 62, DURATION = 200, WDOCK = 30;
   const lerp = (a,b,t)=> a + (b-a)*t;
   const clamp01 = t => t<0?0:t>1?1:t;
@@ -405,21 +407,21 @@
   function apply(p){
     const cy = DOCK_H/2;
     rsvpEl.style.height = lerp(geo.H0, DOCK_H, p) + 'px';
-    stageEl.style.transform = `translateY(${lerp(0, cy-geo.stage.cy, p)}px)`;
-    playBtn.style.transform = `translate(${lerp(0, 18+geo.play.w/2-geo.play.cx, p)}px,${lerp(0, cy-geo.play.cy, p)}px)`;
-    sliderEl.style.transform = `translate(${lerp(0, geo.cardW-18-geo.wpm.w/2-geo.wpm.cx, p)}px,${lerp(0, cy-geo.wpm.cy, p)}px)`;
+    const wordCx = (geo.play.cx + geo.play.w/2 + (geo.wpm.cx - geo.wpm.w/2)) / 2;
+    stageEl.style.transform = `translate(${lerp(0, wordCx-geo.stage.cx, p)}px,${lerp(0, cy-geo.stage.cy, p)}px)`;
+    playBtn.style.transform = `translateY(${lerp(0, cy-geo.play.cy, p)}px)`;
+    sliderEl.style.transform = `translateY(${lerp(0, cy-geo.wpm.cy, p)}px)`;
     labelEl.style.opacity = clamp01(1-p*2);
     guideEl.style.opacity = clamp01(1-p*1.6);
-    const f = clamp01(1-p*2.2);
-    restartBtn.style.opacity = toggleBtn.style.opacity = f;
-    restartBtn.style.pointerEvents = toggleBtn.style.pointerEvents = p>0.4 ? 'none' : '';
+    midEl.style.opacity = clamp01(1-p*2.2);
+    midEl.style.pointerEvents = p>0.4 ? 'none' : '';
     wordEl.style.fontSize = wordEl.classList.contains('idle') ? '' : lerp(geo.wExp, WDOCK, p) + 'px';
   }
   function reset(){
     rsvpEl.style.height = '';
     stageEl.style.transform = playBtn.style.transform = sliderEl.style.transform = '';
-    labelEl.style.opacity = guideEl.style.opacity = restartBtn.style.opacity = toggleBtn.style.opacity = '';
-    restartBtn.style.pointerEvents = toggleBtn.style.pointerEvents = '';
+    labelEl.style.opacity = guideEl.style.opacity = midEl.style.opacity = '';
+    midEl.style.pointerEvents = '';
     wordEl.style.fontSize = '';
   }
   function update(){
