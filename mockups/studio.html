@@ -150,6 +150,8 @@
   .linkrow{display:flex;gap:16px;margin-top:18px;flex-wrap:wrap}
   .linkrow a{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--accent-ink);font-weight:600}
   .linkrow a:hover{text-decoration:underline}
+  .comingsoon{border:1px dashed var(--line);border-radius:18px;padding:32px;background:var(--soft);margin-top:6px}
+  .soon-badge{font-family:"JetBrains Mono",monospace;font-size:11px;padding:4px 10px;border-radius:999px;border:1px dashed var(--faint);color:var(--faint);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
   @media(max-width:880px){.grid3{grid-template-columns:1fr}.feature{grid-template-columns:1fr}.feature .right{border-left:none;border-top:1px solid var(--line)}}
 
   /* ethos + footer */
@@ -171,6 +173,7 @@
     <a href="#mods" class="hideS">mods</a>
     <a href="#apps" class="hideS">apps</a>
     <a href="#tech" class="hideS">tech</a>
+    <a href="#memoir" class="hideS">memoir</a>
     <a class="ext" href="https://www.nexusmods.com/profile/cbecquet/mods">nexus↗</a>
     <a class="ext hideS" href="https://www.youtube.com/@ACBMods">youtube↗</a>
     <button class="themebtn" id="themeBtn" aria-label="Toggle light or dark mode" title="Toggle light / dark">◐</button>
@@ -185,7 +188,7 @@
   <p class="lede">Mods, apps, and lab tools — built in the space between pure coding and pure building. Here's my story, read at 2× speed by the same engine that powers Rapid Reader.</p>
 
   <div class="rsvp" id="rsvp">
-    <div class="label"><span class="live"></span> RSVP&nbsp;·&nbsp;rapid serial visual presentation&nbsp;·&nbsp;press&nbsp;play</div>
+    <div class="label"><span class="live"></span> <span id="rsvpSrc">RSVP · your story</span> &nbsp;—&nbsp; highlight any text to read it here</div>
     <div class="stage">
       <div class="guide"></div>
       <div class="word idle" id="word">▶ &nbsp;my story, one word at a time</div>
@@ -296,9 +299,18 @@
   </div>
 </div></section>
 
+<!-- MEMOIR -->
+<section class="pillar" id="memoir"><div class="wrap">
+  <div class="eyebrow"><span class="sq" style="background:var(--ink)"></span> ACB · writing</div>
+  <div class="comingsoon">
+    <div class="head" style="margin-bottom:10px"><h2 style="margin:0">A memoir.</h2><span class="soon-badge">coming soon</span></div>
+    <p class="sub" style="margin:0">I have a lot of writing I haven't touched in a while. Maybe now is the time to put together what I have, make some edits, and shape it into a comprehensive memoir.</p>
+  </div>
+</div></section>
+
 <!-- ETHOS -->
 <section class="ethos"><div class="wrap">
-  <div class="big">I'm sick of products being so expensive for no reason other than <span class="hl">domination.</span></div>
+  <div class="big">I'm sick of products being so expensive for no reason other than <span class="hl">market domination.</span></div>
   <p>Every tool here is built to hand something powerful back to everybody — for cheap, or for free.</p>
 </div></section>
 
@@ -314,8 +326,9 @@
 <div class="note">mockup A · “studio / three-pillar” · clean modern studio · self-contained, no build step</div>
 
 <script>
-  const TEXT = `I grew up loving science and video games. In 2007, I was playing an old — even at the time — copy of Battlefield 1942, and I first learned the word "AI" in the settings menu. Artificial Intelligence. That made a lot of sense to me to put in a video game. Fast forward 25 years, and people can't stop talking about AI. Most would agree that AI in the right hands could do really good, and in the wrong hands could do really bad. But for some reason, nobody seems to think it's possible to put what we now call "AI" — Large Language Models — into the thing we first put AI in. That's my inspiration: to put the LLMs in a place where they belong.`;
-  const words = TEXT.split(/\s+/).filter(Boolean);
+  const STORY = `I grew up loving science and video games. In 2007 I was playing an old — even at the time — copy of Battlefield 1942, and first learned the word "AI" in the settings menu. Artificial Intelligence. That made a lot of sense to me to put in a video game. Fast forward 25 years and people can't stop talking about AI. Most would agree that AI in the right hands could do really good, and in the wrong hands could do really bad. But for some reason, nobody seems to think it's possible to put what we now call "AI" — Large Language Models — into the thing we first put AI in. That's my inspiration for the living-NPC mods: to put the LLMs in a place where they belong. In my professional life I'm an engineer. I studied physics in university, and I've always lived somewhere in the middle of engineering — between pure coding and pure building. Physics mostly just taught me how the world worked. I was never very good at coding. I slowly learned MATLAB and Python over 6–7 years, but I'd be a fool to say I was anywhere near the level of a software engineer. And then the LLMs came along. A lot of people wanted to ask them personal questions; I wanted to use them to learn how to code better. Now, with agentic coding, I get to leverage that "in-between" lifestyle — letting my creativity spread across multiple fields to build fun tools for everybody.`;
+  const tokenize = t => t.split(/\s+/).filter(Boolean);
+  let words = tokenize(STORY);
   const wordEl = document.getElementById('word');
   const playBtn = document.getElementById('play');
   const wpmEl = document.getElementById('wpm');
@@ -323,7 +336,7 @@
   const fullEl = document.getElementById('full');
   let i = 0, playing = false, timer = null, wpm = 350;
 
-  fullEl.textContent = TEXT;
+  fullEl.textContent = STORY;
 
   function orp(w){
     const len = (w.match(/[A-Za-z0-9]/g)||w).length;
@@ -348,7 +361,19 @@
   function play(){ playing=true; playBtn.textContent='❚❚ Pause'; step(); }
   function stop(){ playing=false; playBtn.textContent='▶ Play'; clearTimeout(timer); }
   playBtn.onclick=()=> playing?stop():play();
-  document.getElementById('restart').onclick=()=>{ stop(); i=0; wordEl.className='word idle'; wordEl.textContent='▶  my story, one word at a time'; };
+  const srcLabel = document.getElementById('rsvpSrc');
+  function setSource(text, label){ stop(); words = tokenize(text); i = 0; srcLabel.textContent = label==='highlight' ? 'RSVP · your highlighted text' : 'RSVP · your story'; }
+  document.getElementById('restart').onclick=()=>{ setSource(STORY,'story'); wordEl.className='word idle'; wordEl.textContent='▶  my story, one word at a time'; };
+
+  // auto-highlight → play any text you select anywhere on the page
+  const rsvpEl = document.getElementById('rsvp');
+  document.addEventListener('mouseup', ()=>{
+    const sel = window.getSelection();
+    const text = sel ? sel.toString().replace(/\s+/g,' ').trim() : '';
+    if(text.length < 12) return;                 // ignore tiny / accidental selections
+    if(rsvpEl.contains(sel.anchorNode)) return;  // ignore selections inside the reader itself
+    setSource(text, 'highlight'); play();
+  });
   wpmEl.oninput=()=>{ wpm=+wpmEl.value; wpmLabel.textContent=wpm+' wpm'; };
   document.getElementById('toggleFull').onclick=(e)=>{ fullEl.classList.toggle('show'); e.target.textContent = fullEl.classList.contains('show')?'Hide text':'Read it normally'; };
 
