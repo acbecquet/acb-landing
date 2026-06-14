@@ -102,6 +102,18 @@
   .full{max-width:680px;margin:18px auto 0;color:var(--muted);font-size:15.5px;
     text-align:left;display:none;border-left:2px solid var(--accent);padding:4px 0 4px 18px}
   .full.show{display:block}
+  /* sticky shrink: docked mini-reader */
+  .rsvp.docked{position:fixed;top:64px;left:0;right:0;max-width:none;z-index:25;margin:0;border-radius:0;
+    border-left:none;border-right:none;border-top:none;border-bottom:1px solid var(--line);
+    background:var(--nav);backdrop-filter:blur(10px);box-shadow:0 10px 24px -16px var(--shadow);
+    display:flex;align-items:center;gap:20px;padding:8px max(24px,calc(50vw - 560px));animation:dock .18s ease}
+  @keyframes dock{from{transform:translateY(-10px);opacity:.5}to{transform:none;opacity:1}}
+  .rsvp.docked .label,.rsvp.docked .full,.rsvp.docked .rsvp-pad,.rsvp.docked #restart,.rsvp.docked #toggleFull{display:none}
+  .rsvp.docked .stage{flex:1;height:auto;min-height:0;overflow:visible;padding:5px 0}
+  .rsvp.docked .guide{top:5px;bottom:5px}
+  .rsvp.docked .word{font-size:clamp(20px,3.2vw,26px)}
+  .rsvp.docked .word.idle{font-size:14px}
+  .rsvp.docked .controls{padding:0;border-top:none;gap:14px;flex:0 0 auto}
 
   /* section scaffold */
   section{padding:64px 0}
@@ -187,7 +199,7 @@
   <h1>Putting the <span class="u">LLMs</span> where they belong.</h1>
   <p class="lede">Mods, apps, and lab tools — built in the space between pure coding and pure building. Here's my story, read at 2× speed by the same engine that powers Rapid Reader.</p>
 
-  <div class="rsvp" id="rsvp">
+  <div class="rsvp-slot" id="rsvpSlot"><div class="rsvp" id="rsvp">
     <div class="label"><span class="live"></span> <span id="rsvpSrc">RSVP · your story</span> &nbsp;—&nbsp; highlight any text to read it here</div>
     <div class="stage">
       <div class="guide"></div>
@@ -200,8 +212,8 @@
       <button class="btn ghost" id="toggleFull">Read it normally</button>
     </div>
     <div class="full" id="full"></div>
-    <div style="height:14px"></div>
-  </div>
+    <div class="rsvp-pad" style="height:14px"></div>
+  </div></div>
 </div></div>
 
 <!-- ORIGIN -->
@@ -375,6 +387,29 @@
   });
   wpmEl.oninput=()=>{ wpm=+wpmEl.value; wpmLabel.textContent=wpm+' wpm'; };
   document.getElementById('toggleFull').onclick=(e)=>{ fullEl.classList.toggle('show'); e.target.textContent = fullEl.classList.contains('show')?'Hide text':'Read it normally'; };
+
+  // sticky shrink: dock the reader to the top once you scroll past its home position
+  const slot = document.getElementById('rsvpSlot');
+  const navH = 64;
+  let homeOffset = 0, fullH = 0, ticking = false;
+  function measure(){
+    if(rsvpEl.classList.contains('docked')) return;
+    const r = rsvpEl.getBoundingClientRect();
+    fullH = r.height; homeOffset = r.top + window.scrollY - navH;
+  }
+  function onScroll(){
+    if(window.scrollY > homeOffset){
+      if(!rsvpEl.classList.contains('docked')){ slot.style.height = fullH+'px'; rsvpEl.classList.add('docked'); }
+    } else if(rsvpEl.classList.contains('docked')){
+      rsvpEl.classList.remove('docked'); slot.style.height='';
+    }
+    ticking = false;
+  }
+  window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(onScroll); } }, {passive:true});
+  window.addEventListener('resize', ()=>{ if(!rsvpEl.classList.contains('docked')) measure(); onScroll(); });
+  window.addEventListener('load', ()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); onScroll(); } });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); onScroll(); } });
+  measure(); onScroll();
 
   // theme toggle
   const themeBtn=document.getElementById('themeBtn');
