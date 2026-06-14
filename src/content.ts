@@ -64,7 +64,10 @@ const text = {
     ],
     chips: ["Claude Code", "Codex", "Copilot", "Cursor"],
     chipsSoon: ["Hermes · soon", "Openclaw · soon"],
-    link: { label: "▸ rapid-reader on GitHub", href: "https://github.com/acbecquet/rapid-reader" },
+    links: [
+      { label: "▸ open Rapid Reader", href: "https://rapid-reader.acb-apps.com" },
+      { label: "▸ rapid-reader on GitHub", href: "https://github.com/acbecquet/rapid-reader" },
+    ],
     rightHeading: "// not just for developers",
     rows: [
       { key: "copy", text: "any link, document, or book (EPUB) — and the audience widens." },
@@ -169,7 +172,7 @@ export const copy: Record<string, string> = {
   "apps.featureHeading": text.apps.featureHeading,
   "apps.featureBody": paras(text.apps.featureBody),
   "apps.chips": chips(text.apps.chips) + chips(text.apps.chipsSoon, "chip soon"),
-  "apps.link": links([text.apps.link]),
+  "apps.links": links(text.apps.links),
   "apps.rightHeading": text.apps.rightHeading,
   "apps.rows": kvRows,
 
