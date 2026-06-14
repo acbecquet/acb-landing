@@ -48,6 +48,29 @@ DNS can take a few minutes to a few hours to propagate; Vercel provisions the HT
 certificate automatically once it resolves. Pick whichever you want as the **primary**
 (apex or `www`) and Vercel redirects the other to it.
 
+### If the domain is registered/managed at Squarespace
+
+Squarespace is the **DNS host**, so the records above must be added **in Squarespace** —
+adding the domain in Vercel only tells Vercel to expect it and shows you which records to
+create. The domain won't work until Squarespace actually points at Vercel:
+
+1. Squarespace → **Domains → `acb-apps.com` → DNS / DNS Settings** (Squarespace bought
+   Google Domains; the panel may read "DNS" or "Advanced DNS").
+2. **Remove** Squarespace's default parking records that conflict — the existing `@`
+   **A** records and the `www` **CNAME** pointing at Squarespace.
+3. **Add:**
+   - **A** · Host `@` · Value `76.76.21.21`
+   - **CNAME** · Host `www` · Value `cname.vercel-dns.com`
+4. Save. In Vercel the domain flips from "Invalid Configuration" to verified once DNS
+   propagates, and HTTPS is issued automatically.
+
+If Vercel throws a hard **error when you add the domain** (vs. just "Invalid
+Configuration"), it's almost always one of:
+- **"Domain is already in use"** — it's still attached to a Squarespace site, or to another
+  Vercel project/account. Detach it there first, or use the **TXT** ownership-verification
+  record Vercel offers.
+- The apex-vs-`www` redirect prompt — not an error, just pick which one is primary.
+
 ## Notes
 
 - Fonts load from Google Fonts at runtime — nothing to configure.
