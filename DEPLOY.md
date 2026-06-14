@@ -35,10 +35,18 @@ npm run build    # type-check + production build into dist/
 npm run preview  # serve the built dist/ locally
 ```
 
-## Custom domain (optional)
+## Custom domain — acb-apps.com
 
-Vercel → Project → **Settings → Domains** → add your domain and follow the DNS
-instructions. Works the same for an apex (`acb.dev`) or subdomain (`www`).
+Vercel → Project → **Settings → Domains** → add **`acb-apps.com`** (and optionally
+`www.acb-apps.com`). Vercel then shows the exact DNS records to add at your registrar:
+
+- **Apex `acb-apps.com`:** an **A** record → `76.76.21.21`
+  *(or, if your registrar supports it, an ALIAS/ANAME → `cname.vercel-dns.com`)*.
+- **`www.acb-apps.com`:** a **CNAME** → `cname.vercel-dns.com`.
+
+DNS can take a few minutes to a few hours to propagate; Vercel provisions the HTTPS
+certificate automatically once it resolves. Pick whichever you want as the **primary**
+(apex or `www`) and Vercel redirects the other to it.
 
 ## Notes
 

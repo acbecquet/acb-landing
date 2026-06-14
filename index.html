@@ -46,7 +46,7 @@
         <button class="btn ghost" id="restart">↺ Restart</button>
         <button class="btn ghost" id="toggleFull">Read it normally</button>
       </div>
-      <div class="slider"><span id="wpmLabel">350 wpm</span><input type="range" id="wpm" min="150" max="700" step="25" value="350" /></div>
+      <div class="slider"><span id="wpmLabel" title="double-click to type a speed">350 wpm</span><input id="wpmEntry" class="wpm-input" type="text" inputmode="numeric" maxlength="3" aria-label="words per minute" hidden /><input type="range" id="wpm" min="150" max="700" step="25" value="350" /></div>
     </div>
     <div class="full" id="full"></div>
     <div class="rsvp-pad" style="height:14px"></div>

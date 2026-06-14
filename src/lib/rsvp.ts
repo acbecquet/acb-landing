@@ -40,6 +40,7 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
   const playBtn = root.querySelector<HTMLButtonElement>("#play")!;
   const wpmEl = root.querySelector<HTMLInputElement>("#wpm")!;
   const wpmLabel = root.querySelector<HTMLElement>("#wpmLabel")!;
+  const wpmEntry = root.querySelector<HTMLInputElement>("#wpmEntry")!;
   const fullEl = root.querySelector<HTMLElement>("#full")!;
   const srcLabel = root.querySelector<HTMLElement>("#rsvpSrc")!;
   const restartBtn = root.querySelector<HTMLButtonElement>("#restart")!;
@@ -99,10 +100,34 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
     wordEl.className = "word idle";
     wordEl.textContent = "▶  my story, one word at a time";
   });
-  wpmEl.addEventListener("input", () => {
-    wpm = Number(wpmEl.value);
+  function setWpm(value: number): void {
+    wpm = Math.min(700, Math.max(150, Math.round(value)));
+    wpmEl.value = String(wpm);
     wpmLabel.textContent = `${wpm} wpm`;
+  }
+  wpmEl.addEventListener("input", () => setWpm(Number(wpmEl.value)));
+
+  // double-click the wpm number to type an exact speed (plain text field, no spinners)
+  function closeEntry(commit: boolean): void {
+    if (commit) {
+      const n = parseInt(wpmEntry.value, 10);
+      if (!Number.isNaN(n)) setWpm(n);
+    }
+    wpmEntry.hidden = true;
+    wpmLabel.hidden = false;
+  }
+  wpmLabel.addEventListener("dblclick", () => {
+    wpmEntry.value = String(wpm);
+    wpmLabel.hidden = true;
+    wpmEntry.hidden = false;
+    wpmEntry.focus();
+    wpmEntry.select();
   });
+  wpmEntry.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") closeEntry(true);
+    else if (e.key === "Escape") closeEntry(false);
+  });
+  wpmEntry.addEventListener("blur", () => closeEntry(true));
   toggleBtn.addEventListener("click", () => {
     const shown = fullEl.classList.toggle("show");
     toggleBtn.textContent = shown ? "Hide text" : "Read it normally";

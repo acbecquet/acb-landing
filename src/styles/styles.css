@@ -55,6 +55,9 @@ header.nav { position: sticky; top: 0; z-index: 30; background: var(--nav);
 .slider { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; font-family: "JetBrains Mono", monospace; width: 128px; }
 #play { min-width: 128px; justify-content: center; }
 input[type="range"] { accent-color: var(--accent); flex: 1; min-width: 0; width: auto; }
+#wpmLabel { cursor: text; }
+.wpm-input { width: 48px; font: inherit; color: var(--ink); background: var(--soft2); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; text-align: center; outline: none; }
+.wpm-input:focus { border-color: var(--accent); }
 .full { max-width: 680px; margin: 18px auto 0; color: var(--muted); font-size: 15.5px;
   text-align: left; display: none; border-left: 2px solid var(--accent); padding: 4px 0 4px 18px; }
 .full.show { display: block; }

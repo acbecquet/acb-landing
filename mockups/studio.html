@@ -101,6 +101,9 @@
   .slider{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-family:"JetBrains Mono",monospace;width:128px}
   #play{min-width:128px;justify-content:center}
   input[type=range]{accent-color:var(--accent);flex:1;min-width:0;width:auto}
+  #wpmLabel{cursor:text}
+  .wpm-input{width:48px;font:inherit;color:var(--ink);background:var(--soft2);border:1px solid var(--line);border-radius:6px;padding:2px 4px;text-align:center;outline:none}
+  .wpm-input:focus{border-color:var(--accent)}
   .full{max-width:680px;margin:18px auto 0;color:var(--muted);font-size:15.5px;
     text-align:left;display:none;border-left:2px solid var(--accent);padding:4px 0 4px 18px}
   .full.show{display:block}
@@ -207,7 +210,7 @@
         <button class="btn ghost" id="restart">↺ Restart</button>
         <button class="btn ghost" id="toggleFull">Read it normally</button>
       </div>
-      <div class="slider"><span id="wpmLabel">350 wpm</span><input type="range" id="wpm" min="150" max="700" step="25" value="350" /></div>
+      <div class="slider"><span id="wpmLabel" title="double-click to type a speed">350 wpm</span><input id="wpmEntry" class="wpm-input" type="text" inputmode="numeric" maxlength="3" aria-label="words per minute" hidden /><input type="range" id="wpm" min="150" max="700" step="25" value="350" /></div>
     </div>
     <div class="full" id="full"></div>
     <div class="rsvp-pad" style="height:14px"></div>
@@ -342,6 +345,7 @@
   const playBtn = document.getElementById('play');
   const wpmEl = document.getElementById('wpm');
   const wpmLabel = document.getElementById('wpmLabel');
+  const wpmEntry = document.getElementById('wpmEntry');
   const fullEl = document.getElementById('full');
   let i = 0, playing = false, timer = null, wpm = 350;
 
@@ -383,7 +387,12 @@
     if(rsvpEl.contains(sel.anchorNode)) return;  // ignore selections inside the reader itself
     setSource(text, 'highlight'); play();
   });
-  wpmEl.oninput=()=>{ wpm=+wpmEl.value; wpmLabel.textContent=wpm+' wpm'; };
+  function setWpm(v){ wpm = Math.min(700, Math.max(150, Math.round(v))); wpmEl.value = String(wpm); wpmLabel.textContent = wpm + ' wpm'; }
+  wpmEl.oninput=()=> setWpm(+wpmEl.value);
+  function closeEntry(commit){ if(commit){ const n = parseInt(wpmEntry.value, 10); if(!Number.isNaN(n)) setWpm(n); } wpmEntry.hidden = true; wpmLabel.hidden = false; }
+  wpmLabel.ondblclick=()=>{ wpmEntry.value = String(wpm); wpmLabel.hidden = true; wpmEntry.hidden = false; wpmEntry.focus(); wpmEntry.select(); };
+  wpmEntry.onkeydown=(e)=>{ if(e.key==='Enter') closeEntry(true); else if(e.key==='Escape') closeEntry(false); };
+  wpmEntry.onblur=()=> closeEntry(true);
   document.getElementById('toggleFull').onclick=(e)=>{ fullEl.classList.toggle('show'); e.target.textContent = fullEl.classList.contains('show')?'Hide text':'Read it normally'; };
 
   // sticky shrink: scroll-LINKED anchored morph — every size/position is a function of scroll, nothing is timed
