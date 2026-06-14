@@ -1,5 +1,5 @@
 /* =============================================================================
-   ✏️  EDIT ALL YOUR WEBSITE TEXT HERE
+   ✏️  EDIT ALL WEBSITE TEXT HERE
    -----------------------------------------------------------------------------
    • Change anything between the quotes. That's it.
    • Wrap a word in **double asterisks** to make it bold.
@@ -39,12 +39,12 @@ const text = {
   mods: {
     eyebrow: "ACB · mods",
     heading: "Immersive NPCs for the games I love.",
-    sub: "Gameplay mods for **Easy Red 2** today — Kingdom Come: Deliverance 2, Battlefield 1942, and more next. The end goal: a barebones, performance-obsessed UE5 game of my own. I'm building for the coming explosion of LLM-NPC games as NVIDIA Spark lands.",
+    sub: "Gameplay mods for **Easy Red 2** today — Kingdom Come: Deliverance 2, Battlefield 1942, and more next. I'm building for the coming explosion of LLM-NPC games as NVIDIA Spark lands.",
     // Add a mod = copy one { } block and edit it.
     items: [
-      { name: "Living NPCs", badge: "unreleased · flagship", blurb: "A large-scale, immersive NPC experience — the mod I hope puts me on the map, at least a little bit.", meta: "easy red 2 · LLM-driven" },
-      { name: "Coop Squad Manager", badge: "unreleased", blurb: "Command and coordinate an AI squad in cooperative play.", meta: "easy red 2 · coop" },
-      { name: "Dogfight Mode", badge: "unreleased", blurb: "A focused aerial-combat mode built for fast, replayable dogfights.", meta: "easy red 2 · aerial" },
+      { name: "Living NPCs", badge: "unreleased · flagship", blurb: "A large-scale, immersive NPC experience.", meta: "easy red 2 · LLM-driven" },
+      { name: "Coop Squad Manager", badge: "released", blurb: "Command and coordinate an AI squad in cooperative play.", meta: "easy red 2 · coop" },
+      { name: "Dogfight Mode", badge: "released", blurb: "A focused aerial-combat mode built for fast, replayable dogfights.", meta: "easy red 2 · aerial" },
     ],
     links: [
       { label: "▸ all my mods on Nexus", href: "https://www.nexusmods.com/profile/cbecquet/mods" },
@@ -59,7 +59,7 @@ const text = {
     sub: "A universal platform to speed up reading. Whether we like it or not, AI is becoming intertwined with our lives — we're taking on more of the burden of a reviewer than of a creator, and the amount of text we ingest daily is becoming extreme.",
     featureHeading: "Read the firehose at 2×.",
     featureBody: [
-      "In the AI industry, many developers switched to Whispr full-time to replace typing and speed up the writing side. Rapid Reader applies that exact concept to the **reading** side. RSVP has been shown to roughly 2× WPM with comprehension on par — and the ceiling climbs much higher with practice.",
+      "In the tech industry, many developers switched to Whispr full-time to replace typing and speed up the writing side. Rapid Reader applies that exact concept to the **reading** side. RSVP has been shown to roughly 2× WPM with comprehension on par — and the ceiling climbs much higher with practice.",
       "It connects your agentic workflows to one universal page: choose a session and speed-read it.",
     ],
     chips: ["Claude Code", "Codex", "Copilot", "Cursor"],
