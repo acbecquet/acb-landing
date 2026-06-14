@@ -1,0 +1,113 @@
+// RSVP playback engine: ORP pivot, smart pacing, play/pause, and swappable source text.
+
+export type RsvpSource = "story" | "highlight";
+
+export interface Rsvp {
+  setSource(text: string, label: RsvpSource): void;
+  play(): void;
+  stop(): void;
+  readonly wordEl: HTMLElement;
+}
+
+const ALNUM = /[A-Za-z0-9]/g;
+
+function orp(word: string): number {
+  const len = (word.match(ALNUM) ?? word).length;
+  if (len <= 1) return 0;
+  if (len <= 5) return 1;
+  if (len <= 9) return 2;
+  if (len <= 13) return 3;
+  return 4;
+}
+
+function esc(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+}
+
+function tokenize(text: string): string[] {
+  return text.split(/\s+/).filter(Boolean);
+}
+
+function delayFor(word: string, wpm: number): number {
+  let d = 60000 / wpm;
+  if (/[.!?…]$/.test(word)) d *= 2.6;
+  else if (/[,;:—]$/.test(word)) d *= 1.7;
+  if (word.length > 9) d *= 1.25;
+  return d;
+}
+
+export function createRsvp(root: HTMLElement, story: string): Rsvp {
+  const wordEl = root.querySelector<HTMLElement>(".word")!;
+  const playBtn = root.querySelector<HTMLButtonElement>("#play")!;
+  const wpmEl = root.querySelector<HTMLInputElement>("#wpm")!;
+  const wpmLabel = root.querySelector<HTMLElement>("#wpmLabel")!;
+  const fullEl = root.querySelector<HTMLElement>("#full")!;
+  const srcLabel = root.querySelector<HTMLElement>("#rsvpSrc")!;
+  const restartBtn = root.querySelector<HTMLButtonElement>("#restart")!;
+  const toggleBtn = root.querySelector<HTMLButtonElement>("#toggleFull")!;
+
+  let words = tokenize(story);
+  let i = 0;
+  let playing = false;
+  let timer: number | undefined;
+  let wpm = 350;
+
+  fullEl.textContent = story;
+
+  function show(w: string): void {
+    const p = Math.min(orp(w), w.length - 1);
+    wordEl.className = "word";
+    wordEl.innerHTML =
+      `<span class="pre">${esc(w.slice(0, p))}</span>` +
+      `<span class="piv">${esc(w[p] ?? "")}</span>` +
+      `<span class="post">${esc(w.slice(p + 1))}</span>`;
+  }
+
+  function step(): void {
+    if (i >= words.length) {
+      stop();
+      i = 0;
+      return;
+    }
+    show(words[i]);
+    i++;
+    timer = window.setTimeout(step, delayFor(words[i - 1], wpm));
+  }
+
+  function play(): void {
+    playing = true;
+    playBtn.textContent = "❚❚ Pause";
+    step();
+  }
+
+  function stop(): void {
+    playing = false;
+    playBtn.textContent = "▶ Play";
+    if (timer) clearTimeout(timer);
+  }
+
+  function setSource(text: string, label: RsvpSource): void {
+    stop();
+    words = tokenize(text);
+    i = 0;
+    srcLabel.textContent =
+      label === "highlight" ? "RSVP · your highlighted text" : "RSVP · your story";
+  }
+
+  playBtn.addEventListener("click", () => (playing ? stop() : play()));
+  restartBtn.addEventListener("click", () => {
+    setSource(story, "story");
+    wordEl.className = "word idle";
+    wordEl.textContent = "▶  my story, one word at a time";
+  });
+  wpmEl.addEventListener("input", () => {
+    wpm = Number(wpmEl.value);
+    wpmLabel.textContent = `${wpm} wpm`;
+  });
+  toggleBtn.addEventListener("click", () => {
+    const shown = fullEl.classList.toggle("show");
+    toggleBtn.textContent = shown ? "Hide text" : "Read it normally";
+  });
+
+  return { setSource, play, stop, wordEl };
+}
