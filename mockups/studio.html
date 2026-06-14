@@ -73,7 +73,8 @@
 
   /* rsvp */
   .rsvp{max-width:760px;margin:0 auto;border:1px solid var(--line);border-radius:var(--r);
-    background:linear-gradient(180deg,var(--panel), var(--panel2));box-shadow:0 24px 60px -34px var(--shadow)}
+    background:linear-gradient(180deg,var(--panel), var(--panel2));box-shadow:0 24px 60px -34px var(--shadow);
+    transition:height .45s cubic-bezier(.4,0,.2,1), box-shadow .3s ease}
   .rsvp .label{display:flex;align-items:center;gap:10px;justify-content:center;
     padding:13px 16px;border-bottom:1px solid var(--line);color:var(--faint);
     font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.04em}
@@ -86,7 +87,7 @@
   .guide:before{top:-1px}.guide:after{bottom:-1px}
   .word{display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;
     font-family:"JetBrains Mono",monospace;font-weight:500;font-size:clamp(30px,6vw,52px);
-    letter-spacing:-.01em;width:100%}
+    letter-spacing:-.01em;width:100%;transition:font-size .45s cubic-bezier(.4,0,.2,1)}
   .word .pre{text-align:right}.word .post{text-align:left}
   .word .piv{color:var(--accent);padding:0 .02em}
   .word.idle{font-size:20px;color:var(--faint);font-family:Inter,sans-serif;grid-template-columns:none;text-align:center}
@@ -109,6 +110,8 @@
   .rsvp.docked .label,.rsvp.docked .full,.rsvp.docked .rsvp-pad,.rsvp.docked #restart,.rsvp.docked #toggleFull{display:none}
   .rsvp.docked .stage{position:absolute;top:0;bottom:0;left:112px;right:112px;height:auto;min-height:0;overflow:visible}
   .rsvp.docked .guide{top:50%;bottom:auto;height:44px;transform:translateY(-50%)}
+  .rsvp.docked .word{font-size:30px}
+  .rsvp.docked .word.idle{font-size:20px}
   .rsvp.docked .controls{position:absolute;inset:0;padding:0 18px;border-top:none;display:flex;align-items:center;justify-content:space-between;gap:0;background:transparent;animation:cfade .2s ease}
   @keyframes cfade{from{opacity:0}to{opacity:1}}
   .rsvp.docked .slider{margin:0}
@@ -386,41 +389,42 @@
   wpmEl.oninput=()=>{ wpm=+wpmEl.value; wpmLabel.textContent=wpm+' wpm'; };
   document.getElementById('toggleFull').onclick=(e)=>{ fullEl.classList.toggle('show'); e.target.textContent = fullEl.classList.contains('show')?'Hide text':'Read it normally'; };
 
-  // sticky shrink: keep the card's rectangle, pin it under the nav, smoothly shrink the height with scroll
+  // sticky shrink: pin under the nav and smoothly shrink the height with a timed CSS transition
   const slot = document.getElementById('rsvpSlot');
-  const DOCK_TOP = 76;   // where it pins (just below the 64px nav)
-  const RANGE = 130;     // scroll distance over which it finishes shrinking
-  const DOCK_H = 62;     // final docked height
-  const lerp = (a,b,t)=> a + (b-a)*t;
-  const easeInOut = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
-  let homeOffset = 0, fullH = 0, wordPx = 46, ticking = false;
+  const DOCK_TOP = 76, DOCK_H = 62;
+  let homeOffset = 0, fullH = 0, ticking = false;
   function measure(){
     if(rsvpEl.classList.contains('docked')) return;
     const r = rsvpEl.getBoundingClientRect();
-    fullH = r.height;
-    homeOffset = r.top + window.scrollY - DOCK_TOP;   // scrollY at which the card top reaches DOCK_TOP
-    const ws = parseFloat(getComputedStyle(wordEl).fontSize); if(ws) wordPx = ws;
+    fullH = r.height; homeOffset = r.top + window.scrollY - DOCK_TOP;
   }
-  function frame(){
+  function dock(){
+    rsvpEl.style.height = fullH + 'px';
+    slot.style.height = fullH + 'px';
+    rsvpEl.classList.add('docked');
+    requestAnimationFrame(()=>{ rsvpEl.style.height = DOCK_H + 'px'; });   // animate full -> docked
+  }
+  function undockDone(e){
+    if(e.propertyName !== 'height') return;
+    rsvpEl.removeEventListener('transitionend', undockDone);
+    if(window.scrollY > homeOffset){ rsvpEl.style.height = DOCK_H + 'px'; }   // scrolled back down mid-grow -> stay docked
+    else { rsvpEl.classList.remove('docked'); rsvpEl.style.height = ''; slot.style.height = ''; }
+  }
+  function undock(){
+    rsvpEl.addEventListener('transitionend', undockDone);
+    rsvpEl.style.height = fullH + 'px';                                    // animate docked -> full, then drop fixed
+  }
+  function check(){
     ticking = false;
-    const past = window.scrollY - homeOffset;
-    if(past <= 0){
-      if(rsvpEl.classList.contains('docked')){
-        rsvpEl.classList.remove('docked'); slot.style.height = '';
-        rsvpEl.style.height = ''; wordEl.style.fontSize = '';
-      }
-      return;
-    }
-    if(!rsvpEl.classList.contains('docked')){ slot.style.height = fullH+'px'; rsvpEl.classList.add('docked'); }
-    const p = easeInOut(Math.min(past/RANGE, 1));
-    rsvpEl.style.height = lerp(fullH, DOCK_H, p) + 'px';
-    wordEl.style.fontSize = lerp(wordPx, 26, p) + 'px';
+    const docked = rsvpEl.classList.contains('docked');
+    if(window.scrollY > homeOffset){ if(!docked) dock(); }
+    else if(docked && rsvpEl.style.height !== fullH + 'px'){ undock(); }
   }
-  window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(frame); } }, {passive:true});
-  window.addEventListener('resize', ()=>{ if(!rsvpEl.classList.contains('docked')) measure(); frame(); });
-  window.addEventListener('load', ()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); frame(); } });
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); frame(); } });
-  measure(); frame();
+  window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(check); } }, {passive:true});
+  window.addEventListener('resize', ()=>{ if(!rsvpEl.classList.contains('docked')) measure(); check(); });
+  window.addEventListener('load', ()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); check(); } });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); check(); } });
+  measure(); check();
 
   // theme toggle
   const themeBtn=document.getElementById('themeBtn');
