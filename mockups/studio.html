@@ -102,18 +102,16 @@
   .full{max-width:680px;margin:18px auto 0;color:var(--muted);font-size:15.5px;
     text-align:left;display:none;border-left:2px solid var(--accent);padding:4px 0 4px 18px}
   .full.show{display:block}
-  /* sticky shrink: docked mini-reader */
-  .rsvp.docked{position:fixed;top:64px;left:0;right:0;max-width:none;z-index:25;margin:0;border-radius:0;
-    border-left:none;border-right:none;border-top:none;border-bottom:1px solid var(--line);
-    background:var(--nav);backdrop-filter:blur(10px);box-shadow:0 10px 24px -16px var(--shadow);
-    display:flex;align-items:center;gap:20px;padding:8px max(24px,calc(50vw - 560px));animation:dock .18s ease}
-  @keyframes dock{from{transform:translateY(-10px);opacity:.5}to{transform:none;opacity:1}}
+  /* sticky shrink: same rectangle, centered, smoothly shrinking height */
+  .rsvp.docked{position:fixed;top:76px;left:50%;transform:translateX(-50%);
+    width:760px;max-width:calc(100vw - 32px);margin:0;z-index:25;overflow:hidden;
+    box-shadow:0 18px 44px -22px var(--shadow)}
   .rsvp.docked .label,.rsvp.docked .full,.rsvp.docked .rsvp-pad,.rsvp.docked #restart,.rsvp.docked #toggleFull{display:none}
-  .rsvp.docked .stage{flex:1;height:auto;min-height:0;overflow:visible;padding:5px 0}
-  .rsvp.docked .guide{top:5px;bottom:5px}
-  .rsvp.docked .word{font-size:clamp(20px,3.2vw,26px)}
-  .rsvp.docked .word.idle{font-size:14px}
-  .rsvp.docked .controls{padding:0;border-top:none;gap:14px;flex:0 0 auto}
+  .rsvp.docked .stage{position:absolute;top:0;bottom:0;left:112px;right:112px;height:auto;min-height:0;overflow:visible}
+  .rsvp.docked .guide{top:50%;bottom:auto;height:44px;transform:translateY(-50%)}
+  .rsvp.docked .controls{position:absolute;inset:0;padding:0 18px;border-top:none;display:flex;align-items:center;justify-content:space-between;gap:0;background:transparent;animation:cfade .2s ease}
+  @keyframes cfade{from{opacity:0}to{opacity:1}}
+  .rsvp.docked .slider{margin:0}
 
   /* section scaffold */
   section{padding:64px 0}
@@ -388,28 +386,41 @@
   wpmEl.oninput=()=>{ wpm=+wpmEl.value; wpmLabel.textContent=wpm+' wpm'; };
   document.getElementById('toggleFull').onclick=(e)=>{ fullEl.classList.toggle('show'); e.target.textContent = fullEl.classList.contains('show')?'Hide text':'Read it normally'; };
 
-  // sticky shrink: dock the reader to the top once you scroll past its home position
+  // sticky shrink: keep the card's rectangle, pin it under the nav, smoothly shrink the height with scroll
   const slot = document.getElementById('rsvpSlot');
-  const navH = 64;
-  let homeOffset = 0, fullH = 0, ticking = false;
+  const DOCK_TOP = 76;   // where it pins (just below the 64px nav)
+  const RANGE = 130;     // scroll distance over which it finishes shrinking
+  const DOCK_H = 62;     // final docked height
+  const lerp = (a,b,t)=> a + (b-a)*t;
+  const easeInOut = t => t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+  let homeOffset = 0, fullH = 0, wordPx = 46, ticking = false;
   function measure(){
     if(rsvpEl.classList.contains('docked')) return;
     const r = rsvpEl.getBoundingClientRect();
-    fullH = r.height; homeOffset = r.top + window.scrollY - navH;
+    fullH = r.height;
+    homeOffset = r.top + window.scrollY - DOCK_TOP;   // scrollY at which the card top reaches DOCK_TOP
+    const ws = parseFloat(getComputedStyle(wordEl).fontSize); if(ws) wordPx = ws;
   }
-  function onScroll(){
-    if(window.scrollY > homeOffset){
-      if(!rsvpEl.classList.contains('docked')){ slot.style.height = fullH+'px'; rsvpEl.classList.add('docked'); }
-    } else if(rsvpEl.classList.contains('docked')){
-      rsvpEl.classList.remove('docked'); slot.style.height='';
-    }
+  function frame(){
     ticking = false;
+    const past = window.scrollY - homeOffset;
+    if(past <= 0){
+      if(rsvpEl.classList.contains('docked')){
+        rsvpEl.classList.remove('docked'); slot.style.height = '';
+        rsvpEl.style.height = ''; wordEl.style.fontSize = '';
+      }
+      return;
+    }
+    if(!rsvpEl.classList.contains('docked')){ slot.style.height = fullH+'px'; rsvpEl.classList.add('docked'); }
+    const p = easeInOut(Math.min(past/RANGE, 1));
+    rsvpEl.style.height = lerp(fullH, DOCK_H, p) + 'px';
+    wordEl.style.fontSize = lerp(wordPx, 26, p) + 'px';
   }
-  window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(onScroll); } }, {passive:true});
-  window.addEventListener('resize', ()=>{ if(!rsvpEl.classList.contains('docked')) measure(); onScroll(); });
-  window.addEventListener('load', ()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); onScroll(); } });
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); onScroll(); } });
-  measure(); onScroll();
+  window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(frame); } }, {passive:true});
+  window.addEventListener('resize', ()=>{ if(!rsvpEl.classList.contains('docked')) measure(); frame(); });
+  window.addEventListener('load', ()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); frame(); } });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); frame(); } });
+  measure(); frame();
 
   // theme toggle
   const themeBtn=document.getElementById('themeBtn');
