@@ -30,9 +30,9 @@
 
 <!-- HERO -->
 <div class="hero"><div class="wrap">
-  <div class="kicker">Charlie Becquet — engineer · physicist · builder</div>
-  <h1 class="balance">Putting the <span class="u">LLMs</span> where they belong.</h1>
-  <p class="lede">Mods, apps, and lab tools — built in the space between pure coding and pure building. Here's my story, read at 2× speed by the same engine that powers Rapid Reader.</p>
+  <div class="kicker">{{hero.kicker}}</div>
+  <h1 class="balance">{{hero.title}}</h1>
+  <p class="lede">{{hero.lede}}</p>
 
   <div class="rsvp-slot" id="rsvpSlot"><div class="rsvp" id="rsvp">
     <div class="label"><span class="live"></span> <span id="rsvpSrc">RSVP · your story</span> &nbsp;—&nbsp; highlight any text to read it here</div>
@@ -54,102 +54,82 @@
 
 <!-- ORIGIN -->
 <section class="origin" id="about"><div class="wrap">
-  <div class="eyebrow"><span class="sq" style="background:var(--accent)"></span> where this comes from</div>
+  <div class="eyebrow"><span class="sq" style="background:var(--accent)"></span> {{origin.eyebrow}}</div>
   <div class="cols2">
     <div>
-      <h3>// the settings menu, 2007</h3>
-      <p class="pull">I grew up loving science and video games. In 2007 I was playing an old — even at the time — copy of Battlefield 1942, and first learned the word "AI" in the settings menu. Artificial Intelligence. That made a lot of sense to me to put in a video game.</p>
-      <p>Fast forward 25 years and people can't stop talking about AI. Most would agree that AI in the right hands could do really good, and in the wrong hands could do really bad. But for some reason, nobody seems to think it's possible to put what we now call "AI" — Large Language Models — into the thing we first put AI in. That's my inspiration for the living-NPC mods: to put the LLMs in a place where they belong.</p>
+      <h3>{{origin.leftHeading}}</h3>
+      {{origin.left}}
     </div>
     <div>
-      <h3>// jack-of-all-trades, master of none</h3>
-      <p>In my professional life I'm an engineer. I studied physics in university, and I've always lived somewhere in the middle of engineering — between pure coding and pure building. Physics mostly just taught me how the world worked.</p>
-      <p>I was never very good at coding. I slowly learned MATLAB and Python over 6–7 years, but I'd be a fool to say I was anywhere near the level of a software engineer. And then the LLMs came along. A lot of people wanted to ask them personal questions; I wanted to use them to learn how to code better.</p>
-      <p>Now, with agentic coding, I get to leverage that "in-between" lifestyle — letting my creativity spread across multiple fields to build fun tools for everybody.</p>
+      <h3>{{origin.rightHeading}}</h3>
+      {{origin.right}}
     </div>
   </div>
 </div></section>
 
 <!-- MODS -->
 <section class="pillar" id="mods"><div class="wrap">
-  <div class="eyebrow"><span class="sq" style="background:var(--mods)"></span> ACB · mods</div>
-  <div class="head"><h2 class="balance">Immersive NPCs for the games I love.</h2></div>
-  <p class="sub">Gameplay mods for <b>Easy Red 2</b> today — Kingdom Come: Deliverance 2, Battlefield 1942, and more next. The end goal: a barebones, performance-obsessed UE5 game of my own. I'm building for the coming explosion of LLM-NPC games as NVIDIA Spark lands.</p>
-  <div class="grid3" id="mods-grid"></div>
-  <div class="linkrow">
-    <a href="https://www.nexusmods.com/profile/cbecquet/mods">▸ all my mods on Nexus</a>
-    <a href="https://www.youtube.com/@ACBMods">▸ ACBMods on YouTube</a>
-  </div>
+  <div class="eyebrow"><span class="sq" style="background:var(--mods)"></span> {{mods.eyebrow}}</div>
+  <div class="head"><h2 class="balance">{{mods.heading}}</h2></div>
+  <p class="sub">{{mods.sub}}</p>
+  <div class="grid3" id="mods-grid">{{mods.grid}}</div>
+  <div class="linkrow">{{mods.links}}</div>
 </div></section>
 
 <!-- APPS -->
 <section class="pillar" id="apps"><div class="wrap">
-  <div class="eyebrow"><span class="sq" style="background:var(--apps)"></span> ACB · apps</div>
-  <div class="head"><h2>Rapid Reader</h2><span class="tag">flagship app</span></div>
-  <p class="sub">A universal platform to speed up reading. Whether we like it or not, AI is becoming intertwined with our lives — we're taking on more of the burden of a reviewer than of a creator, and the amount of text we ingest daily is becoming extreme.</p>
+  <div class="eyebrow"><span class="sq" style="background:var(--apps)"></span> {{apps.eyebrow}}</div>
+  <div class="head"><h2>{{apps.heading}}</h2><span class="tag">{{apps.tag}}</span></div>
+  <p class="sub">{{apps.sub}}</p>
   <div class="feature">
     <div class="left">
-      <h4>Read the firehose at 2×.</h4>
-      <p>In the AI industry, many developers switched to Whispr full-time to replace typing and speed up the writing side. Rapid Reader applies that exact concept to the <b>reading</b> side. RSVP has been shown to roughly 2× WPM with comprehension on par — and the ceiling climbs much higher with practice.</p>
-      <p>It connects your agentic workflows to one universal page: choose a session and speed-read it.</p>
-      <div class="chips">
-        <span class="chip">Claude Code</span><span class="chip">Codex</span><span class="chip">Copilot</span><span class="chip">Cursor</span>
-        <span class="chip soon">Hermes · soon</span><span class="chip soon">Openclaw · soon</span>
-      </div>
-      <div class="linkrow"><a href="https://github.com/acbecquet/rapid-reader">▸ rapid-reader on GitHub</a></div>
+      <h4>{{apps.featureHeading}}</h4>
+      {{apps.featureBody}}
+      <div class="chips">{{apps.chips}}</div>
+      <div class="linkrow">{{apps.link}}</div>
     </div>
     <div class="right">
-      <h3 class="mono" style="margin:0 0 14px;font-size:13px;color:var(--faint)">// not just for developers</h3>
-      <div class="kv">
-        <div class="row"><b>copy</b><span>any link, document, or book (EPUB) — and the audience widens.</span></div>
-        <div class="row"><b>elderly</b><span>and readers who simply want to read more efficiently.</span></div>
-        <div class="row"><b>newsgoers</b><span>who don't have time to read the news. API news integration is planned.</span></div>
-        <div class="row"><b>engine</b><span>ORP pivot letter · smart pacing on long words, numbers, and clause / sentence pauses.</span></div>
-      </div>
+      <h3 class="mono" style="margin:0 0 14px;font-size:13px;color:var(--faint)">{{apps.rightHeading}}</h3>
+      <div class="kv">{{apps.rows}}</div>
     </div>
   </div>
 </div></section>
 
 <!-- TECH -->
 <section class="pillar" id="tech"><div class="wrap">
-  <div class="eyebrow"><span class="sq" style="background:var(--tech)"></span> ACB · tech</div>
-  <div class="head"><h2 class="balance">Software that bridges physical media.</h2></div>
-  <p class="sub">Lab and instrument tools that take something absurdly expensive to make, open-source it, and build a business teaching people how to use it.</p>
+  <div class="eyebrow"><span class="sq" style="background:var(--tech)"></span> {{tech.eyebrow}}</div>
+  <div class="head"><h2 class="balance">{{tech.heading}}</h2></div>
+  <p class="sub">{{tech.sub}}</p>
   <div class="feature">
     <div class="left">
-      <h4>Video Viscometer</h4>
-      <p>Measure fluid viscosity from ordinary video — a personal project built for use at my work. The standard instruments cost a fortune; this one is <b>open-source</b> — the same capability for anyone, with the business built on teaching people how to use it.</p>
-      <div class="linkrow"><a href="https://github.com/acbecquet/video-viscometer">▸ video-viscometer on GitHub</a></div>
+      <h4>{{tech.featureHeading}}</h4>
+      {{tech.featureBody}}
+      <div class="linkrow">{{tech.link}}</div>
     </div>
     <div class="right">
-      <h3 class="mono" style="margin:0 0 14px;font-size:13px;color:var(--faint)">// the philosophy</h3>
-      <p class="pull" style="font-size:17px">Take something that costs a ridiculous amount of money to make, open-source it, and make a business off teaching people how to use the new product.</p>
+      <h3 class="mono" style="margin:0 0 14px;font-size:13px;color:var(--faint)">{{tech.rightHeading}}</h3>
+      <p class="pull" style="font-size:17px">{{tech.pull}}</p>
     </div>
   </div>
 </div></section>
 
 <!-- MEMOIR -->
 <section class="pillar" id="memoir"><div class="wrap">
-  <div class="eyebrow"><span class="sq" style="background:var(--ink)"></span> ACB · writing</div>
+  <div class="eyebrow"><span class="sq" style="background:var(--ink)"></span> {{memoir.eyebrow}}</div>
   <a class="comingsoon" href="/memoir.html">
-    <div class="head"><h2 style="margin:0">A memoir.</h2><span class="soon-badge">coming soon</span></div>
+    <div class="head"><h2 style="margin:0">{{memoir.heading}}</h2><span class="soon-badge">{{memoir.badge}}</span></div>
   </a>
 </div></section>
 
 <!-- ETHOS -->
 <section class="ethos"><div class="wrap">
-  <div class="big balance">I'm sick of products being so expensive for no reason other than <span class="hl">market domination.</span></div>
-  <p>Every tool here is built to hand something powerful back to everybody — for cheap, or for free.</p>
+  <div class="big balance">{{ethos.big}}</div>
+  <p>{{ethos.sub}}</p>
 </div></section>
 
 <footer><div class="wrap">
-  <div>© 2026 Charlie Becquet · ACB</div>
-  <div style="display:flex;gap:18px">
-    <a href="https://github.com/acbecquet">github</a>
-    <a href="https://www.nexusmods.com/profile/cbecquet/mods">nexus</a>
-    <a href="https://www.youtube.com/@ACBMods">youtube</a>
-    <a href="mailto:becquetcharlie@gmail.com">email</a>
-  </div>
+  <div>{{footer.copyright}}</div>
+  <div style="display:flex;gap:18px">{{footer.links}}</div>
 </div></footer>
 
 </body>
