@@ -74,7 +74,7 @@
   /* rsvp */
   .rsvp{max-width:760px;margin:0 auto;border:1px solid var(--line);border-radius:var(--r);
     background:linear-gradient(180deg,var(--panel), var(--panel2));box-shadow:0 24px 60px -34px var(--shadow);
-    transition:height .45s cubic-bezier(.4,0,.2,1), box-shadow .3s ease}
+    transition:box-shadow .25s ease}
   .rsvp .label{display:flex;align-items:center;gap:10px;justify-content:center;
     padding:13px 16px;border-bottom:1px solid var(--line);color:var(--faint);
     font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.04em}
@@ -87,12 +87,11 @@
   .guide:before{top:-1px}.guide:after{bottom:-1px}
   .word{display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;
     font-family:"JetBrains Mono",monospace;font-weight:500;font-size:clamp(30px,6vw,52px);
-    letter-spacing:-.01em;width:100%;transition:font-size .45s cubic-bezier(.4,0,.2,1)}
+    letter-spacing:-.01em;width:100%}
   .word .pre{text-align:right}.word .post{text-align:left}
   .word .piv{color:var(--accent);padding:0 .02em}
   .word.idle{font-size:20px;color:var(--faint);font-family:Inter,sans-serif;grid-template-columns:none;text-align:center}
-  .controls{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap;
-    padding:16px;border-top:1px solid var(--line)}
+  .controls{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap;padding:16px}
   .btn{display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:none;
     background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;padding:11px 20px;border-radius:999px}
   .btn:hover{background:var(--accent);color:#fff}
@@ -103,18 +102,12 @@
   .full{max-width:680px;margin:18px auto 0;color:var(--muted);font-size:15.5px;
     text-align:left;display:none;border-left:2px solid var(--accent);padding:4px 0 4px 18px}
   .full.show{display:block}
-  /* sticky shrink: same rectangle, centered, smoothly shrinking height */
+  /* sticky shrink: scroll-linked anchored morph (positions & sizes interpolated in JS) */
   .rsvp.docked{position:fixed;top:76px;left:50%;transform:translateX(-50%);
     width:760px;max-width:calc(100vw - 32px);margin:0;z-index:25;overflow:hidden;
-    box-shadow:0 18px 44px -22px var(--shadow)}
-  .rsvp.docked .label,.rsvp.docked .full,.rsvp.docked .rsvp-pad,.rsvp.docked #restart,.rsvp.docked #toggleFull{display:none}
-  .rsvp.docked .stage{position:absolute;top:0;bottom:0;left:112px;right:112px;height:auto;min-height:0;overflow:visible}
-  .rsvp.docked .guide{top:50%;bottom:auto;height:44px;transform:translateY(-50%)}
-  .rsvp.docked .word{font-size:30px}
-  .rsvp.docked .word.idle{font-size:20px}
-  .rsvp.docked .controls{position:absolute;inset:0;padding:0 18px;border-top:none;display:flex;align-items:center;justify-content:space-between;gap:0;background:transparent;animation:cfade .2s ease}
-  @keyframes cfade{from{opacity:0}to{opacity:1}}
-  .rsvp.docked .slider{margin:0}
+    box-shadow:0 18px 44px -22px var(--shadow);will-change:height}
+  .rsvp.docked .full,.rsvp.docked .rsvp-pad{display:none}
+  .rsvp.docked .stage,.rsvp.docked #play,.rsvp.docked .slider{will-change:transform}
 
   /* section scaffold */
   section{padding:64px 0}
@@ -389,42 +382,62 @@
   wpmEl.oninput=()=>{ wpm=+wpmEl.value; wpmLabel.textContent=wpm+' wpm'; };
   document.getElementById('toggleFull').onclick=(e)=>{ fullEl.classList.toggle('show'); e.target.textContent = fullEl.classList.contains('show')?'Hide text':'Read it normally'; };
 
-  // sticky shrink: pin under the nav and smoothly shrink the height with a timed CSS transition
+  // sticky shrink: scroll-LINKED anchored morph — every size/position is a function of scroll, nothing is timed
   const slot = document.getElementById('rsvpSlot');
-  const DOCK_TOP = 76, DOCK_H = 62;
-  let homeOffset = 0, fullH = 0, ticking = false;
+  const stageEl = rsvpEl.querySelector('.stage');
+  const guideEl = rsvpEl.querySelector('.guide');
+  const labelEl = rsvpEl.querySelector('.label');
+  const sliderEl = rsvpEl.querySelector('.slider');
+  const restartBtn = document.getElementById('restart');
+  const toggleBtn = document.getElementById('toggleFull');
+  const DOCK_TOP = 76, DOCK_H = 62, DURATION = 200, WDOCK = 30;
+  const lerp = (a,b,t)=> a + (b-a)*t;
+  const clamp01 = t => t<0?0:t>1?1:t;
+  let geo = null, pinned = false, ticking = false;
+  function rel(el,c){ const r = el.getBoundingClientRect(); return {cx:r.left-c.left+r.width/2, cy:r.top-c.top+r.height/2, w:r.width}; }
   function measure(){
-    if(rsvpEl.classList.contains('docked')) return;
-    const r = rsvpEl.getBoundingClientRect();
-    fullH = r.height; homeOffset = r.top + window.scrollY - DOCK_TOP;
+    if(pinned) return;                                   // measure only in the natural (expanded) state
+    const c = rsvpEl.getBoundingClientRect();
+    geo = { home:c.top+window.scrollY-DOCK_TOP, H0:c.height, cardW:c.width,
+            play:rel(playBtn,c), wpm:rel(sliderEl,c), stage:rel(stageEl,c),
+            wExp:Math.min(52, Math.max(30, 0.06*window.innerWidth)) };
   }
-  function dock(){
-    rsvpEl.style.height = fullH + 'px';
-    slot.style.height = fullH + 'px';
-    rsvpEl.classList.add('docked');
-    requestAnimationFrame(()=>{ rsvpEl.style.height = DOCK_H + 'px'; });   // animate full -> docked
+  function apply(p){
+    const cy = DOCK_H/2;
+    rsvpEl.style.height = lerp(geo.H0, DOCK_H, p) + 'px';
+    stageEl.style.transform = `translateY(${lerp(0, cy-geo.stage.cy, p)}px)`;
+    playBtn.style.transform = `translate(${lerp(0, 18+geo.play.w/2-geo.play.cx, p)}px,${lerp(0, cy-geo.play.cy, p)}px)`;
+    sliderEl.style.transform = `translate(${lerp(0, geo.cardW-18-geo.wpm.w/2-geo.wpm.cx, p)}px,${lerp(0, cy-geo.wpm.cy, p)}px)`;
+    labelEl.style.opacity = clamp01(1-p*2);
+    guideEl.style.opacity = clamp01(1-p*1.6);
+    const f = clamp01(1-p*2.2);
+    restartBtn.style.opacity = toggleBtn.style.opacity = f;
+    restartBtn.style.pointerEvents = toggleBtn.style.pointerEvents = p>0.4 ? 'none' : '';
+    wordEl.style.fontSize = wordEl.classList.contains('idle') ? '' : lerp(geo.wExp, WDOCK, p) + 'px';
   }
-  function undockDone(e){
-    if(e.propertyName !== 'height') return;
-    rsvpEl.removeEventListener('transitionend', undockDone);
-    if(window.scrollY > homeOffset){ rsvpEl.style.height = DOCK_H + 'px'; }   // scrolled back down mid-grow -> stay docked
-    else { rsvpEl.classList.remove('docked'); rsvpEl.style.height = ''; slot.style.height = ''; }
+  function reset(){
+    rsvpEl.style.height = '';
+    stageEl.style.transform = playBtn.style.transform = sliderEl.style.transform = '';
+    labelEl.style.opacity = guideEl.style.opacity = restartBtn.style.opacity = toggleBtn.style.opacity = '';
+    restartBtn.style.pointerEvents = toggleBtn.style.pointerEvents = '';
+    wordEl.style.fontSize = '';
   }
-  function undock(){
-    rsvpEl.addEventListener('transitionend', undockDone);
-    rsvpEl.style.height = fullH + 'px';                                    // animate docked -> full, then drop fixed
-  }
-  function check(){
+  function update(){
     ticking = false;
-    const docked = rsvpEl.classList.contains('docked');
-    if(window.scrollY > homeOffset){ if(!docked) dock(); }
-    else if(docked && rsvpEl.style.height !== fullH + 'px'){ undock(); }
+    if(!geo) measure();
+    const p = clamp01((window.scrollY - geo.home) / DURATION);
+    if(p <= 0){
+      if(pinned){ pinned = false; rsvpEl.classList.remove('docked'); slot.style.height=''; reset(); }
+      return;
+    }
+    if(!pinned){ pinned = true; slot.style.height = geo.H0 + 'px'; rsvpEl.classList.add('docked'); }
+    apply(p);
   }
-  window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(check); } }, {passive:true});
-  window.addEventListener('resize', ()=>{ if(!rsvpEl.classList.contains('docked')) measure(); check(); });
-  window.addEventListener('load', ()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); check(); } });
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(!rsvpEl.classList.contains('docked')){ measure(); check(); } });
-  measure(); check();
+  window.addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  window.addEventListener('resize', ()=>{ if(!pinned) geo = null; update(); });
+  window.addEventListener('load', ()=>{ if(!pinned){ geo = null; update(); } });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ if(!pinned){ geo = null; update(); } });
+  update();
 
   // theme toggle
   const themeBtn=document.getElementById('themeBtn');
