@@ -4,8 +4,7 @@
 //      anchor. It only translates vertically as the box collapses around it.
 //   2. Play and the WPM slider are equal width at equal insets (set in CSS), so a
 //      card-centered word automatically has even gaps on both sides — symmetric.
-//   3. Play and the slider also only move vertically; the middle controls, label, and
-//      focal guide fade out.
+//   3. Play and the slider also only move vertically; the middle controls and label fade out.
 // Everything is a pure function of scroll position — no timed transition, no layout swap.
 
 const DOCK_TOP = 76;
@@ -33,7 +32,6 @@ function relCy(el: Element, c: DOMRect): Rel {
 
 export function initDock(rsvpEl: HTMLElement, slot: HTMLElement): void {
   const stageEl = rsvpEl.querySelector<HTMLElement>(".stage")!;
-  const guideEl = rsvpEl.querySelector<HTMLElement>(".guide")!;
   const labelEl = rsvpEl.querySelector<HTMLElement>(".label")!;
   const sliderEl = rsvpEl.querySelector<HTMLElement>(".slider")!;
   const midEl = rsvpEl.querySelector<HTMLElement>(".controls-mid")!;
@@ -65,7 +63,6 @@ export function initDock(rsvpEl: HTMLElement, slot: HTMLElement): void {
     playBtn.style.transform = `translateY(${lerp(0, cy - g.play.cy, p)}px)`;
     sliderEl.style.transform = `translateY(${lerp(0, cy - g.wpm.cy, p)}px)`;
     labelEl.style.opacity = `${clamp01(1 - p * 2)}`;
-    guideEl.style.opacity = `${clamp01(1 - p * 1.6)}`;
     midEl.style.opacity = `${clamp01(1 - p * 2.2)}`;
     midEl.style.pointerEvents = p > 0.4 ? "none" : "";
   }
@@ -76,7 +73,6 @@ export function initDock(rsvpEl: HTMLElement, slot: HTMLElement): void {
     playBtn.style.transform = "";
     sliderEl.style.transform = "";
     labelEl.style.opacity = "";
-    guideEl.style.opacity = "";
     midEl.style.opacity = "";
     midEl.style.pointerEvents = "";
   }

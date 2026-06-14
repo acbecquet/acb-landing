@@ -81,10 +81,6 @@
   .rsvp .label .live{width:7px;height:7px;border-radius:50%;background:var(--mods);
     box-shadow:0 0 0 4px rgba(255,106,61,.16)}
   .stage{position:relative;height:188px;display:grid;place-items:center;overflow:hidden}
-  .guide{position:absolute;left:50%;top:34px;bottom:58px;width:1px;background:var(--line)}
-  .guide:before,.guide:after{content:"";position:absolute;left:-3px;width:7px;height:7px;
-    border-radius:50%;background:var(--accent)}
-  .guide:before{top:-1px}.guide:after{bottom:-1px}
   .word{display:grid;grid-template-columns:1fr auto 1fr;align-items:baseline;
     font-family:"JetBrains Mono",monospace;font-weight:500;font-size:clamp(30px,6vw,52px);
     letter-spacing:-.01em;width:100%}
@@ -201,7 +197,6 @@
   <div class="rsvp-slot" id="rsvpSlot"><div class="rsvp" id="rsvp">
     <div class="label"><span class="live"></span> <span id="rsvpSrc">RSVP · your story</span> &nbsp;—&nbsp; highlight any text to read it here</div>
     <div class="stage">
-      <div class="guide"></div>
       <div class="word idle" id="word">▶ &nbsp;my story, one word at a time</div>
     </div>
     <div class="controls">
@@ -398,7 +393,6 @@
   // sticky shrink: scroll-LINKED anchored morph — every size/position is a function of scroll, nothing is timed
   const slot = document.getElementById('rsvpSlot');
   const stageEl = rsvpEl.querySelector('.stage');
-  const guideEl = rsvpEl.querySelector('.guide');
   const labelEl = rsvpEl.querySelector('.label');
   const sliderEl = rsvpEl.querySelector('.slider');
   const midEl = rsvpEl.querySelector('.controls-mid');
@@ -421,14 +415,13 @@
     playBtn.style.transform = `translateY(${lerp(0, cy-geo.play.cy, p)}px)`;
     sliderEl.style.transform = `translateY(${lerp(0, cy-geo.wpm.cy, p)}px)`;
     labelEl.style.opacity = clamp01(1-p*2);
-    guideEl.style.opacity = clamp01(1-p*1.6);
     midEl.style.opacity = clamp01(1-p*2.2);
     midEl.style.pointerEvents = p>0.4 ? 'none' : '';
   }
   function reset(){
     rsvpEl.style.height = '';
     stageEl.style.transform = playBtn.style.transform = sliderEl.style.transform = '';
-    labelEl.style.opacity = guideEl.style.opacity = midEl.style.opacity = '';
+    labelEl.style.opacity = midEl.style.opacity = '';
     midEl.style.pointerEvents = '';
     wordEl.style.fontSize = '';
   }
