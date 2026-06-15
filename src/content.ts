@@ -31,7 +31,7 @@ const text = {
     rightHeading: "// jack-of-all-trades, master of none",
     right: [
       `In my professional life I'm an engineer. I studied physics in university, and I've always lived somewhere in the middle of engineering — between pure coding and pure building. Physics mostly just taught me how the world worked.`,
-      `I was never very good at coding. I slowly learned MATLAB and Python over 6–7 years, but I'd be a fool to say I was anywhere near the level of a software engineer. And then the LLMs came along. A lot of people wanted to ask them personal questions; I wanted to use them to learn how to code better.`,
+      `I was never very good at coding. I slowly learned MATLAB and Python over 6–7 years, but I'd be a fool to say I was anywhere near the level of a software engineer. And then the LLMs came along. A lot of people wanted to ask them personal questions; I wanted to use them to learn software development.`,
       `Now, with agentic coding, I get to leverage that "in-between" lifestyle — letting my creativity spread across multiple fields to build fun tools for everybody.`,
     ],
   },
