@@ -175,7 +175,8 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
   wpmEntry.addEventListener("blur", () => closeEntry(true));
   toggleBtn.addEventListener("click", () => {
     const shown = fullEl.classList.toggle("show");
-    toggleBtn.textContent = shown ? "Hide text" : "Read it normally";
+    const lbl = toggleBtn.querySelector<HTMLElement>(".lbl");
+    if (lbl) lbl.textContent = shown ? "Hide text" : "Read it normally";
   });
 
   return { setSource, play, stop };
