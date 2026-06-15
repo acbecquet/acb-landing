@@ -65,9 +65,15 @@ header.nav { position: sticky; top: 0; z-index: 30; background: var(--nav);
 .controls-mid { display: flex; align-items: center; gap: 18px; }
 .btn { display: inline-flex; align-items: center; gap: 9px; cursor: pointer; border: none;
   background: var(--ink); color: var(--bg); font-weight: 600; font-size: 14px; padding: 11px 20px; border-radius: 999px; }
-.btn:hover { background: var(--accent); color: #fff; }
 .btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
-.btn.ghost:hover { color: var(--ink); border-color: var(--ink); background: transparent; }
+/* hover styling only where a real pointer exists — otherwise a tap leaves the button
+   stuck looking "on" on touch screens until a refresh */
+@media (hover: hover) {
+  .btn:hover { background: var(--accent); color: #fff; }
+  .btn.ghost:hover { color: var(--ink); border-color: var(--ink); background: transparent; }
+}
+/* the transcript toggle's "on" state tracks the open transcript exactly */
+.btn.ghost.on { color: var(--accent); border-color: var(--accent); }
 .btn .ico { display: none; }
 .slider { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; font-family: "JetBrains Mono", monospace; width: 128px; }
 #play { min-width: 128px; justify-content: center; }
