@@ -9,6 +9,7 @@
   --badge-bg: rgba(255, 106, 61, 0.12); --badge-fg: #c43c12;
   --maxw: 1120px;
   --r: 16px;
+  --logo-url: url("/brand/acb-color.png");
   color-scheme: light;
 }
 :root[data-theme="dark"] {
@@ -19,6 +20,7 @@
   --nav: rgba(10, 11, 14, 0.82); --shadow: rgba(0, 0, 0, 0.55);
   --ethos-bg: #14161d; --ethos-fg: #f2f3f7; --ethos-mut: #9aa1b2; --ethos-hl: #9fb0ff;
   --badge-bg: rgba(255, 122, 80, 0.16); --badge-fg: #ff9a73;
+  --logo-url: url("/brand/acb-white.png");
   color-scheme: dark;
 }
 
