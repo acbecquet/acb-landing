@@ -6,9 +6,12 @@ import { createRsvp } from "./lib/rsvp";
 import { initHighlight } from "./lib/highlight";
 import { initDock } from "./lib/dock";
 import { initTheme } from "./lib/theme";
+import { initNav } from "./lib/nav";
 import { balanceHeadlines } from "./lib/headlines";
 
 function main(): void {
+  initNav();
+
   const themeBtn = document.querySelector<HTMLElement>("#themeBtn");
   if (themeBtn) initTheme(themeBtn);
 

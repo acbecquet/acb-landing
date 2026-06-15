@@ -9,12 +9,29 @@ header.nav { position: sticky; top: 0; z-index: 30; background: var(--nav);
 .navlinks a { font-size: 14px; color: var(--muted); font-weight: 500; white-space: nowrap; }
 .navlinks a:hover { color: var(--ink); }
 .navlinks .ext { font-family: "JetBrains Mono", monospace; font-size: 12.5px; }
-.pill { padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; font-weight: 600; }
-.pill:hover { border-color: var(--accent); color: var(--accent); }
-.themebtn { cursor: pointer; border: 1px solid var(--line); background: transparent; color: var(--muted);
-  width: 36px; height: 36px; border-radius: 999px; font-size: 15px; line-height: 1; display: grid; place-items: center; padding: 0; }
-.themebtn:hover { border-color: var(--accent); color: var(--accent); }
-@media (max-width: 780px) { .navlinks .hideS { display: none; } }
+.navtools { display: flex; align-items: center; gap: 14px; position: relative; }
+.themebtn, .menubtn { cursor: pointer; border: 1px solid var(--line); background: transparent; color: var(--muted);
+  width: 36px; height: 36px; border-radius: 999px; line-height: 1; place-items: center; padding: 0; }
+.themebtn { font-size: 15px; display: grid; }
+.menubtn { font-size: 16px; display: none; }
+.themebtn:hover, .menubtn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* phones + tablets: the whole nav collapses into a dropdown opened by the ☰ button,
+   so every section header stays reachable instead of being hidden. */
+@media (max-width: 780px) {
+  .menubtn { display: grid; }
+  .navlinks {
+    position: absolute; top: calc(100% + 14px); right: 0;
+    flex-direction: column; align-items: stretch; gap: 2px;
+    min-width: 212px; padding: 8px;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: 0 22px 44px -22px var(--shadow); display: none;
+  }
+  .nav.open .navlinks { display: flex; }
+  .navlinks a { padding: 11px 14px; border-radius: 9px; font-size: 15px; color: var(--ink); }
+  .navlinks .ext { font-size: 14px; }
+  .navlinks a:hover { background: var(--soft); }
+}
 
 /* hero */
 .hero { padding: 74px 0 28px; text-align: center; }
@@ -26,6 +43,9 @@ header.nav { position: sticky; top: 0; z-index: 30; background: var(--nav);
 .lede { color: var(--muted); font-size: clamp(16px, 2vw, 19px); max-width: 60ch; margin: 0 auto 30px; }
 
 /* rsvp */
+/* Pull the reader to the same width it docks at (16px from each edge), so its width
+   never jumps when it pins on scroll. Harmless on desktop where .rsvp caps at 760px. */
+.rsvp-slot { margin-left: -12px; margin-right: -12px; }
 .rsvp { max-width: 760px; margin: 0 auto; border: 1px solid var(--line); border-radius: var(--r);
   background: linear-gradient(180deg, var(--panel), var(--panel2)); box-shadow: 0 24px 60px -34px var(--shadow);
   transition: box-shadow 0.25s ease; }
@@ -136,7 +156,6 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
    becomes a small typed input — equal width at the edges so the centered word keeps
    even gaps and never gets squished. The dock/scroll behaviour is unchanged. */
 @media (max-width: 560px) {
-  .navlinks { gap: 16px; }
   .controls { gap: 10px; padding: 14px; }
   /* every control becomes an icon on phones, so they all fit on one row like desktop */
   .btn .lbl { display: none; }
