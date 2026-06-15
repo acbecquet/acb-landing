@@ -6,7 +6,7 @@ header.nav { position: sticky; top: 0; z-index: 30; background: var(--nav);
 .brand .dot { width: 11px; height: 11px; border-radius: 3px; background: var(--accent);
   box-shadow: 0 0 0 4px rgba(58, 91, 255, 0.14); }
 .navlinks { display: flex; gap: 26px; align-items: center; }
-.navlinks a { font-size: 14px; color: var(--muted); font-weight: 500; }
+.navlinks a { font-size: 14px; color: var(--muted); font-weight: 500; white-space: nowrap; }
 .navlinks a:hover { color: var(--ink); }
 .navlinks .ext { font-family: "JetBrains Mono", monospace; font-size: 12.5px; }
 .pill { padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; font-weight: 600; }
@@ -130,3 +130,18 @@ footer a { color: var(--muted); } footer a:hover { color: var(--ink); }
 .memoir-hero h1 { font-size: clamp(40px, 8vw, 88px); letter-spacing: -0.04em; font-weight: 800; margin: 0 0 18px; }
 .memoir-hero .back { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--muted); margin-top: 26px; display: inline-block; }
 .memoir-hero .back:hover { color: var(--accent); }
+
+/* phones: keep the docked reader symmetric. Play becomes an icon and the WPM slider
+   becomes a small typed input — equal width at the edges so the centered word keeps
+   even gaps and never gets squished. The dock/scroll behaviour is unchanged. */
+@media (max-width: 560px) {
+  .navlinks { gap: 16px; }
+  .controls { gap: 12px; padding: 14px; }
+  #play { width: 48px; min-width: 0; padding: 9px 0; }
+  #play .lbl { display: none; }
+  .btn.ghost { padding: 8px 11px; font-size: 13px; }
+  .slider { width: 48px; gap: 0; }
+  .slider #wpmLabel,
+  .slider input[type="range"] { display: none; }
+  .slider .wpm-input { display: block; width: 100%; }
+}

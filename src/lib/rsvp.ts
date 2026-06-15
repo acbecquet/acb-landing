@@ -53,6 +53,7 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
   let wpm = 350;
 
   fullEl.textContent = story;
+  wpmEntry.value = String(wpm);
 
   function show(w: string): void {
     const p = Math.min(orp(w), w.length - 1);
@@ -76,13 +77,13 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
 
   function play(): void {
     playing = true;
-    playBtn.textContent = "❚❚ Pause";
+    playBtn.innerHTML = '❚❚<span class="lbl">Pause</span>';
     step();
   }
 
   function stop(): void {
     playing = false;
-    playBtn.textContent = "▶ Play";
+    playBtn.innerHTML = '▶<span class="lbl">Play</span>';
     if (timer) clearTimeout(timer);
   }
 
@@ -103,6 +104,7 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
   function setWpm(value: number): void {
     wpm = Math.min(700, Math.max(150, Math.round(value)));
     wpmEl.value = String(wpm);
+    wpmEntry.value = String(wpm);
     wpmLabel.textContent = `${wpm} wpm`;
   }
   wpmEl.addEventListener("input", () => setWpm(Number(wpmEl.value)));
@@ -113,6 +115,7 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
       const n = parseInt(wpmEntry.value, 10);
       if (!Number.isNaN(n)) setWpm(n);
     }
+    wpmEntry.value = String(wpm);
     wpmEntry.hidden = true;
     wpmLabel.hidden = false;
   }
