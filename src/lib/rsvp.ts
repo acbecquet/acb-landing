@@ -135,7 +135,7 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
     sizeWords();
     i = 0;
     srcLabel.textContent =
-      label === "highlight" ? "RSVP · your highlighted text" : "RSVP · your story";
+      label === "highlight" ? "reading your highlighted text" : "highlight any text to read it here";
   }
 
   playBtn.addEventListener("click", () => (playing ? stop() : play()));
