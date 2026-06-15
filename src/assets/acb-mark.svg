@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" role="img" aria-label="ACB monogram">
+  <g fill="none" stroke="currentColor" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- A: sharp apex + long graceful descender -->
+    <path d="M122 24 L128 150 C129 175 126 190 118 200"/>
+    <!-- A: left leg, crossing the C sweep -->
+    <path d="M122 24 L74 118"/>
+    <!-- C: open embracing sweep -->
+    <path d="M156 100 C108 64 40 84 44 122 C47 154 108 166 154 130"/>
+    <!-- B: two bowls nested on the spine -->
+    <path d="M120 90 C150 87 152 110 121 114 C152 114 154 140 120 141"/>
+  </g>
+</svg>

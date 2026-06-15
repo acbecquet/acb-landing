@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ACB — identity mark</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#0b0c0f; --muted:#5b6270; --faint:#8a90a0;
+    --line:#e6e8ee; --accent:#3a5bff; --mods:#ff6a3d; --apps:#3a5bff; --tech:#13b274;
+  }
+  html[data-theme="dark"]{
+    --bg:#0a0b0e; --card:#111219; --ink:#f2f3f7; --muted:#a6acba; --faint:#6e7585;
+    --line:#23252e; --accent:#6a86ff; --apps:#6a86ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+  .wrap{max-width:1040px;margin:0 auto;padding:48px 28px 80px}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .lockup{display:flex;align-items:center;gap:14px}
+  .lockup .mark{width:46px;height:50px;color:var(--ink)}
+  .lockup .wm{font-weight:800;font-size:30px;letter-spacing:-1.5px}
+  .lockup .sub{font-size:11px;letter-spacing:5px;color:var(--faint);margin-top:2px}
+  button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);
+    color:var(--ink);border-radius:10px;padding:8px 14px}
+  p.intro{color:var(--muted);max-width:60ch;margin:18px 0 40px}
+  .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:240px;position:relative}
+  .card .cap{position:absolute;left:16px;bottom:12px;font-size:12px;color:var(--faint)}
+  .card.dark{background:#0a0b0e;border-color:#23252e}
+  .card.dark .cap{color:#6e7585}
+  .mark{display:block}
+  .m-lg{width:170px;height:187px}
+  .m-md{width:84px;height:92px}
+  .swatches{display:flex;gap:26px;align-items:flex-end}
+  .badge{border-radius:22%;display:block}
+  .b96{width:96px;height:96px}.b56{width:56px;height:56px}.b32{width:32px;height:32px}
+  h2{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--faint);
+    margin:48px 0 14px;font-weight:700}
+  .tint-mods{color:var(--mods)}.tint-apps{color:var(--apps)}.tint-tech{color:var(--tech)}
+  .accent{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="lockup">
+      <span class="mark" id="lk"></span>
+      <div><div class="wm">ACB</div><div class="sub">CHARLIE&nbsp;&nbsp;BECQUET</div></div>
+    </div>
+    <button id="theme">◐ theme</button>
+  </header>
+  <p class="intro">An identity mark distilled from Charlie's handwritten signature — the
+    <strong>A</strong>, <strong>C</strong> and <strong>B</strong> woven into one continuous
+    gesture. A single even-weight stroke keeps it sleek and modern, and because the mark is
+    drawn with <code>currentColor</code> it inherits whatever color it sits in.</p>
+
+  <div class="grid">
+    <div class="card"><span class="mark m-lg accent" id="a"></span><span class="cap">primary · accent</span></div>
+    <div class="card"><span class="mark m-lg" style="color:var(--ink)" id="b"></span><span class="cap">primary · ink</span></div>
+    <div class="card dark"><span class="mark m-lg" style="color:#6a86ff" id="c"></span><span class="cap">on dark</span></div>
+  </div>
+
+  <h2>App icon · favicon</h2>
+  <div class="card" style="align-items:flex-start">
+    <div class="swatches">
+      <span class="badge b96" id="i1"></span>
+      <span class="badge b56" id="i2"></span>
+      <span class="badge b32" id="i3"></span>
+    </div>
+  </div>
+
+  <h2>Flexes to each division</h2>
+  <div class="grid">
+    <div class="card"><span class="mark m-md tint-mods" id="t1"></span><span class="cap">ACB · mods</span></div>
+    <div class="card"><span class="mark m-md tint-apps" id="t2"></span><span class="cap">ACB · apps</span></div>
+    <div class="card"><span class="mark m-md tint-tech" id="t3"></span><span class="cap">ACB · tech</span></div>
+  </div>
+</div>
+
+<script>
+  const MARK = `<svg viewBox="0 0 200 220" fill="none" stroke="currentColor" stroke-width="8.5"
+      stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%">
+      <path d="M122 24 L128 150 C129 175 126 190 118 200"/>
+      <path d="M122 24 L74 118"/>
+      <path d="M156 100 C108 64 40 84 44 122 C47 154 108 166 154 130"/>
+      <path d="M120 90 C150 87 152 110 121 114 C152 114 154 140 120 141"/></svg>`;
+  const BADGE = `<svg viewBox="0 0 200 200" style="width:100%;height:100%">
+      <rect width="200" height="200" rx="44" fill="#3a5bff"/>
+      <g fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M112 44 L118 150 C119 165 116 172 110 176"/>
+        <path d="M112 44 L76 120"/>
+        <path d="M150 104 C112 78 58 92 62 120 C65 144 110 152 146 128"/>
+        <path d="M112 96 C138 94 139 112 113 116 C140 116 141 138 112 138"/></g></svg>`;
+  ['lk','a','b','c','t1','t2','t3'].forEach(id=>document.getElementById(id).innerHTML=MARK);
+  ['i1','i2','i3'].forEach(id=>document.getElementById(id).innerHTML=BADGE);
+  const root=document.documentElement;
+  document.getElementById('theme').onclick=()=>root.setAttribute('data-theme',
+    root.getAttribute('data-theme')==='dark'?'light':'dark');
+</script>
+</body>
+</html>
