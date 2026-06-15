@@ -55,9 +55,51 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
   fullEl.textContent = story;
   wpmEntry.value = String(wpm);
 
+  // ── Adaptive word sizing (the SwiftUI minimumScaleFactor idea): scale the centred word
+  //    to fit the room between Play and the WPM control, so it never crowds or overlaps on
+  //    any screen size. Computed per source (fits the longest word) and on resize, and held
+  //    constant while scrolling — only the screen size changes it.
+  const MONO = 0.62; // JetBrains Mono advance width ≈ 0.62em
+  const MIN_FONT = 14;
+  const idleText = (): string =>
+    window.innerWidth <= 560 ? "▶  press play" : "▶  my story, one word at a time";
+  function availableWidth(): number {
+    return root.clientWidth - 2 * playBtn.offsetWidth - 56;
+  }
+  function fitFont(maxLen: number, base: number): number {
+    const f = availableWidth() / Math.max(maxLen, 1) / MONO;
+    return Math.round(Math.max(MIN_FONT, Math.min(base, f)));
+  }
+  let wordFont = 0;
+  function sizeWords(): void {
+    const longest = words.reduce((m, w) => Math.max(m, w.length), 1);
+    const base = Math.min(52, Math.max(30, 0.06 * window.innerWidth));
+    wordFont = fitFont(longest, base);
+  }
+  function showIdle(): void {
+    const t = idleText();
+    wordEl.className = "word idle";
+    wordEl.textContent = t;
+    wordEl.style.fontSize = `${fitFont(t.length, 18)}px`;
+  }
+  function refit(): void {
+    sizeWords();
+    if (wordEl.classList.contains("idle")) showIdle();
+    else wordEl.style.fontSize = `${wordFont}px`;
+  }
+  sizeWords();
+  showIdle();
+  let resizeTimer: number | undefined;
+  window.addEventListener("resize", () => {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(refit, 120);
+  });
+  void document.fonts.ready.then(refit);
+
   function show(w: string): void {
     const p = Math.min(orp(w), w.length - 1);
     wordEl.className = "word";
+    wordEl.style.fontSize = `${wordFont}px`;
     wordEl.innerHTML =
       `<span class="pre">${esc(w.slice(0, p))}</span>` +
       `<span class="piv">${esc(w[p] ?? "")}</span>` +
@@ -90,6 +132,7 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
   function setSource(text: string, label: RsvpSource): void {
     stop();
     words = tokenize(text);
+    sizeWords();
     i = 0;
     srcLabel.textContent =
       label === "highlight" ? "RSVP · your highlighted text" : "RSVP · your story";
@@ -98,8 +141,7 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
   playBtn.addEventListener("click", () => (playing ? stop() : play()));
   restartBtn.addEventListener("click", () => {
     setSource(story, "story");
-    wordEl.className = "word idle";
-    wordEl.textContent = "▶  my story, one word at a time";
+    showIdle();
   });
   function setWpm(value: number): void {
     wpm = Math.min(700, Math.max(150, Math.round(value)));
