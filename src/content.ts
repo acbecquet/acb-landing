@@ -47,7 +47,7 @@ const text = {
       { name: "Dogfight Mode", badge: "released", blurb: "A focused aerial-combat mode built for fast, replayable dogfights.", meta: "easy red 2 · aerial" },
     ],
     links: [
-      { label: "▸ all my mods on Nexus", href: "https://www.nexusmods.com/profile/cbecquet/mods" },
+      { label: "▸ my game mods", href: "https://www.nexusmods.com/profile/cbecquet/mods" },
       { label: "▸ ACBMods on YouTube", href: "https://www.youtube.com/@ACBMods" },
     ],
   },
