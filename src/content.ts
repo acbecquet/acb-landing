@@ -15,6 +15,7 @@ export const story =
 
 const text = {
   hero: {
+    kicker: "",
     title: "Putting the LLMs where they belong.",
     titleAccent: "LLMs", // this exact word in the title gets the underline accent
     lede: "Mods, apps, and lab tools — built in the space between pure coding and pure building. Here's my story, read at 2× speed by the same engine that powers Rapid Reader.",
