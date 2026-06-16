@@ -55,8 +55,8 @@ const text = {
   apps: {
     eyebrow: "ACB · apps",
     heading: "Rapid Reader",
-    tag: "flagship app",
-    sub: "A universal platform to speed up reading. Whether we like it or not, AI is becoming intertwined with our lives — we're taking on more of the burden of a reviewer than of a creator, and the amount of text we ingest daily is becoming extreme.",
+    tag: "flagship application",
+    sub: "A universal platform to speed up reading. Whether we like it or not, AI is becoming intertwined with our lives — we're taking on more of the burden of a reviewer than of a creator, and the amount of text we ingest daily is becoming extreme. For future developers, training this skill will amplify productivity.",
     featureHeading: "Read the firehose at 2×.",
     featureBody: [
       "In the tech industry, many developers switched to Whispr full-time to replace typing and speed up the writing side. Rapid Reader applies that exact concept to the **reading** side. RSVP has been shown to roughly 2× WPM with comprehension on par — and the ceiling climbs much higher with practice.",
