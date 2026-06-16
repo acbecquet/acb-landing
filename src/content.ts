@@ -131,7 +131,14 @@ const accent = (s: string, word: string, cls: string): string =>
   word ? s.replace(word, `<span class="${cls}">${word}</span>`) : s;
 const paras = (arr: string[]): string => arr.map((p) => `<p>${bold(p)}</p>`).join("");
 const links = (arr: { label: string; href: string }[]): string =>
-  arr.map((l) => `<a href="${l.href}">${l.label}</a>`).join("");
+  arr
+    .map((l) => {
+      // External (http/https) links open in a new tab so visitors never leave the page.
+      // mailto: and any internal links are left as normal same-tab links.
+      const ext = /^https?:/.test(l.href) ? ` target="_blank" rel="noopener noreferrer"` : "";
+      return `<a href="${l.href}"${ext}>${l.label}</a>`;
+    })
+    .join("");
 
 const modCards = text.mods.items
   .map(
