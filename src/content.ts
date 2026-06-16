@@ -38,17 +38,17 @@ const text = {
 
   mods: {
     eyebrow: "ACB · mods",
-    heading: "Immersive NPCs for the games I love.",
+    heading: "Immersive experiences for the games I love.",
     sub: "Gameplay mods for **Easy Red 2** today — Kingdom Come: Deliverance 2, Battlefield 1942, and more next. I'm building for the coming explosion of LLM-NPC games as NVIDIA Spark lands.",
     // Add a mod = copy one { } block and edit it.
     items: [
-      { name: "Living NPCs", badge: "unreleased · flagship", blurb: "A large-scale, immersive NPC experience.", meta: "easy red 2 · LLM-driven" },
+      { name: "Living NPCs", badge: "unreleased · flagship", blurb: "A large-scale, immersive NPC experience.", meta: "easy red 2 · experience emergent behavior" },
       { name: "Coop Squad Manager", badge: "released", blurb: "Command and coordinate an AI squad in cooperative play.", meta: "easy red 2 · coop" },
       { name: "Dogfight Mode", badge: "released", blurb: "A focused aerial-combat mode built for fast, replayable dogfights.", meta: "easy red 2 · aerial" },
     ],
     links: [
       { label: "▸ my game mods", href: "https://www.nexusmods.com/profile/cbecquet/mods" },
-      { label: "▸ ACBMods on YouTube", href: "https://www.youtube.com/@ACBMods" },
+      { label: "▸ ACBMods on youtube", href: "https://www.youtube.com/@ACBMods" },
     ],
   },
 
@@ -65,8 +65,8 @@ const text = {
     chips: ["Claude Code", "Codex", "Copilot", "Cursor"],
     chipsSoon: ["Hermes · soon", "Openclaw · soon"],
     links: [
-      { label: "▸ open Rapid Reader", href: "https://rapid-reader.acb-apps.com" },
-      { label: "▸ rapid-reader on GitHub", href: "https://github.com/acbecquet/rapid-reader" },
+      { label: "▸ open rapid reader", href: "https://rapid-reader.acb-apps.com" },
+      { label: "▸ rapid-reader on gitHub", href: "https://github.com/acbecquet/rapid-reader" },
     ],
     rightHeading: "// not just for developers",
     rows: [
