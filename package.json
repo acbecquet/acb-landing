@@ -17,6 +17,7 @@
     "vitest": "^4.1.9"
   },
   "dependencies": {
-    "@chenglou/pretext": "^0.0.8"
+    "@chenglou/pretext": "^0.0.8",
+    "@vercel/analytics": "^2.0.1"
   }
 }

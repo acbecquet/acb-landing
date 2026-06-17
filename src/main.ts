@@ -1,6 +1,8 @@
 import "./styles/tokens.css";
 import "./styles/styles.css";
 
+import { inject } from "@vercel/analytics";
+
 import { story } from "./content";
 import { createRsvp } from "./lib/rsvp";
 import { initHighlight } from "./lib/highlight";
@@ -10,6 +12,7 @@ import { initNav } from "./lib/nav";
 import { balanceHeadlines } from "./lib/headlines";
 
 function main(): void {
+  inject(); // Vercel Web Analytics
   initNav();
 
   const themeBtn = document.querySelector<HTMLElement>("#themeBtn");
