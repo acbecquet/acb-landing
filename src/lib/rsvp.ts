@@ -9,6 +9,7 @@ export interface Rsvp {
 }
 
 const ALNUM = /[A-Za-z0-9]/g;
+const WORDCHAR = /[A-Za-z0-9]/;
 
 function orp(word: string): number {
   const len = (word.match(ALNUM) ?? word).length;
@@ -23,8 +24,24 @@ function esc(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 }
 
-function tokenize(text: string): string[] {
-  return text.split(/\s+/).filter(Boolean);
+// Split a whitespace token on internal hyphens, keeping the hyphen on the leading piece:
+// "jack-of-all-trades" → "jack-", "of-", "all-", "trades". Only hyphens flanked by
+// alphanumerics split, so "well-", "-thing", and "a--b" stay intact.
+function splitHyphens(w: string): string[] {
+  const out: string[] = [];
+  let start = 0;
+  for (let k = 1; k < w.length - 1; k++) {
+    if (w[k] === "-" && WORDCHAR.test(w[k - 1]) && WORDCHAR.test(w[k + 1])) {
+      out.push(w.slice(start, k + 1));
+      start = k + 1;
+    }
+  }
+  out.push(w.slice(start));
+  return out;
+}
+
+export function tokenize(text: string): string[] {
+  return text.split(/\s+/).filter(Boolean).flatMap(splitHyphens);
 }
 
 function delayFor(word: string, wpm: number): number {
@@ -118,6 +135,7 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
   }
 
   function play(): void {
+    if (playing || words.length === 0) return;
     playing = true;
     playBtn.innerHTML = '❚❚<span class="lbl">Pause</span>';
     step();
@@ -136,6 +154,7 @@ export function createRsvp(root: HTMLElement, story: string): Rsvp {
     i = 0;
     srcLabel.textContent =
       label === "highlight" ? "reading your highlighted text" : "highlight any text to read it here";
+    if (words.length) show(words[0]); // prime the first word, paused — playback waits for Play
   }
 
   playBtn.addEventListener("click", () => (playing ? stop() : play()));
