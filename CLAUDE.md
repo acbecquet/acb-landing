@@ -69,7 +69,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 An interactive TypeScript landing page for Charlie Becquet's projects, split into three divisions:
 
 - **ACB · mods** — gameplay mods for Easy Red 2 (flagship: Living NPCs; also Coop Squad Manager, Dogfight Mode), heading toward LLM-driven NPCs and, eventually, an original UE5 game. Links: Nexus (`cbecquet`), YouTube (`@ACBMods`).
-- **ACB · apps** — Rapid Reader, an RSVP speed-reading platform for agentic workflows and any text/EPUB. Repo: `acbecquet/rapid-reader`.
+- **ACB · apps** — Rapid Reader, an RSVP speed-reading platform for agentic workflows and any text/EPUB (repo: `acbecquet/rapid-reader`); and FaceBack, a parody front-of-head → back-of-head generator built as a real hosted product (repo: `acbecquet/FaceBack`, site: faceback.acb-apps.com).
 - **ACB · tech** — software that bridges physical media (Video Viscometer), built on an open-source philosophy: open-source the expensive thing, then make a business teaching people how to use it. Repo: `acbecquet/video-viscometer`.
 
 Voice: keep Charlie's real words. The personal manifesto (the 2007 settings-menu story, "put the LLMs where they belong", "jack-of-all-trades", the anti-"domination" ethos) is anchor copy — preserve it, don't paraphrase it away.
