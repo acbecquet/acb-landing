@@ -82,9 +82,9 @@ const text = {
     heading: "FaceBack",
     tag: "parody app",
     sub: "Take a photo of the **front** of someone's head - get back a photorealistic render of the **back** of their head. A parody app inspired by the app created by Will Ferrell in the film **The Other Guys**.",
-    featureHeading: `"It's just the back of their hea."`,
+    featureHeading: `"It's just the back of their head."`,
     featureBody: [
-      "Sign in with an emailed code, add your own Gemini API key, and take or upload the front of your head. Faceback hands back the other side.",
+      "Sign in with an emailed code, add your own Gemini API key, and take or upload the front of your head. FaceBack hands back the other side.",
       "The premise is absurd; the engineering is not. Keys are **encrypted at rest** and never returned to the browser, the generation prompt lives server-side and ignores instructions hidden inside the photo, and every limit is enforced where the client can't touch it.",
     ],
     chips: ["Cloudflare Pages", "React"],
