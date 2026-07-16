@@ -81,13 +81,13 @@ const text = {
     eyebrow: "ACB · apps",
     heading: "FaceBack",
     tag: "parody app",
-    sub: "Take a photo of the **front** of someone's head - get back a photorealistic render of the **back** of their head. A parody app in the spirit of **The Other Guys**, built out like a real product because that's the joke.",
-    featureHeading: `"It's just the back of their head."`,
+    sub: "Take a photo of the **front** of someone's head - get back a photorealistic render of the **back** of their head. A parody app inspired by the app created by Will Ferrell in the film **The Other Guys**.",
+    featureHeading: `"It's just the back of their hea."`,
     featureBody: [
-      "Sign in with an emailed code, add your own Gemini API key, and take or upload a front-of-head photo - the server sends it to Google's image model and hands back the other side. Invited friends can skip the key entirely and generate on a shared account with daily caps.",
+      "Sign in with an emailed code, add your own Gemini API key, and take or upload the front of your head. Faceback hands back the other side.",
       "The premise is absurd; the engineering is not. Keys are **encrypted at rest** and never returned to the browser, the generation prompt lives server-side and ignores instructions hidden inside the photo, and every limit is enforced where the client can't touch it.",
     ],
-    chips: ["Cloudflare Pages", "D1", "KV", "Gemini", "React"],
+    chips: ["Cloudflare Pages", "React"],
     links: [
       { label: "▸ open faceback", href: "https://faceback.acb-apps.com" },
       { label: "▸ faceback on github", href: "https://github.com/acbecquet/FaceBack" },
@@ -95,9 +95,8 @@ const text = {
     rightHeading: "// yes, it's real",
     rows: [
       { key: "anyone", text: "can sign up - passwordless email codes, bring your own Gemini key." },
-      { key: "friends", text: "get an invite-only shared key, so they can play without any setup." },
       { key: "security", text: "AES-256-GCM at rest · server-side prompt · server-enforced caps." },
-      { key: "next", text: "a native iOS app built in SwiftUI, delivered through TestFlight." },
+      { key: "next", text: "a native iOS app built in SwiftUI, delivered through TestFlight. Built without ever touching a mac." },
     ],
     pull: "Who knows, it could solve a crime one day.",
   },
