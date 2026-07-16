@@ -22,7 +22,7 @@ const text = {
   },
 
   origin: {
-    eyebrow: "where this comes from",
+    eyebrow: "where it all started",
     leftHeading: "// the settings menu, 2007",
     left: [
       `I grew up loving science and video games. In 2007 I was playing an old — even at the time — copy of Battlefield 1942, and first learned the word "AI" in the settings menu. Artificial Intelligence. That made a lot of sense to me to put in a video game.`,
