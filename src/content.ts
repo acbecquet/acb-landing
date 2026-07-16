@@ -77,6 +77,31 @@ const text = {
     ],
   },
 
+  faceback: {
+    eyebrow: "ACB · apps",
+    heading: "FaceBack",
+    tag: "parody app",
+    sub: "Take a photo of the **front** of someone's head - get back a photorealistic render of the **back** of their head. A parody app in the spirit of **The Other Guys**, built out like a real product because that's the joke.",
+    featureHeading: `"It's just the back of their head."`,
+    featureBody: [
+      "Sign in with an emailed code, add your own Gemini API key, and take or upload a front-of-head photo - the server sends it to Google's image model and hands back the other side. Invited friends can skip the key entirely and generate on a shared account with daily caps.",
+      "The premise is absurd; the engineering is not. Keys are **encrypted at rest** and never returned to the browser, the generation prompt lives server-side and ignores instructions hidden inside the photo, and every limit is enforced where the client can't touch it.",
+    ],
+    chips: ["Cloudflare Pages", "D1", "KV", "Gemini", "React"],
+    links: [
+      { label: "▸ open faceback", href: "https://faceback.acb-apps.com" },
+      { label: "▸ faceback on github", href: "https://github.com/acbecquet/FaceBack" },
+    ],
+    rightHeading: "// yes, it's real",
+    rows: [
+      { key: "anyone", text: "can sign up - passwordless email codes, bring your own Gemini key." },
+      { key: "friends", text: "get an invite-only shared key, so they can play without any setup." },
+      { key: "security", text: "AES-256-GCM at rest · server-side prompt · server-enforced caps." },
+      { key: "next", text: "a native iOS app built in SwiftUI, delivered through TestFlight." },
+    ],
+    pull: "Who knows, it could solve a crime one day.",
+  },
+
   tech: {
     eyebrow: "ACB · tech",
     heading: "Software that bridges physical media.",
@@ -149,9 +174,8 @@ const modCards = text.mods.items
 const chips = (arr: string[], cls = "chip"): string =>
   arr.map((c) => `<span class="${cls}">${c}</span>`).join("");
 
-const kvRows = text.apps.rows
-  .map((r) => `<div class="row"><b>${r.key}</b><span>${bold(r.text)}</span></div>`)
-  .join("");
+const kvRows = (arr: { key: string; text: string }[]): string =>
+  arr.map((r) => `<div class="row"><b>${r.key}</b><span>${bold(r.text)}</span></div>`).join("");
 
 /** Flat map of placeholder name -> ready-to-use HTML. Used by the build to fill
  *  the {{...}} slots in index.html / memoir.html. */
@@ -181,7 +205,19 @@ export const copy: Record<string, string> = {
   "apps.chips": chips(text.apps.chips) + chips(text.apps.chipsSoon, "chip soon"),
   "apps.links": links(text.apps.links),
   "apps.rightHeading": text.apps.rightHeading,
-  "apps.rows": kvRows,
+  "apps.rows": kvRows(text.apps.rows),
+
+  "faceback.eyebrow": text.faceback.eyebrow,
+  "faceback.heading": text.faceback.heading,
+  "faceback.tag": text.faceback.tag,
+  "faceback.sub": bold(text.faceback.sub),
+  "faceback.featureHeading": text.faceback.featureHeading,
+  "faceback.featureBody": paras(text.faceback.featureBody),
+  "faceback.chips": chips(text.faceback.chips),
+  "faceback.links": links(text.faceback.links),
+  "faceback.rightHeading": text.faceback.rightHeading,
+  "faceback.rows": kvRows(text.faceback.rows),
+  "faceback.pull": bold(text.faceback.pull),
 
   "tech.eyebrow": text.tech.eyebrow,
   "tech.heading": text.tech.heading,
