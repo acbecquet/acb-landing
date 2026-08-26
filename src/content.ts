@@ -21,6 +21,30 @@ const text = {
     lede: "Mods, apps, and lab tools — built in the space between pure coding and pure building. Here's my story, read at 2× speed by the same engine that powers Rapid Reader.",
   },
 
+  podium: {
+    eyebrow: "ACB · apps",
+    heading: "Podium Chasers",
+    tag: "new · fantasy F1 game",
+    sub: "A fantasy F1 game built on all of Formula 1 history. Spin up a team from any era, race a **simulated season** against a real field, and chase the leaderboard.",
+    featureHeading: "Every number on the page is real.",
+    featureBody: [
+      "Spin an era and a team, pick two drivers at their **career peaks**, and watch a full season play out. The simulation is deterministic - the same lineup always produces the same season - so leaderboard scores are server-verified and unfakeable. Sign in with an email code (no passwords, ever) to collect badges and a public username.",
+      "Underneath sits a serious prediction engine: a teammate-only **Elo rating** for every driver since 1950, plus Monte Carlo race and season simulation, producing predictions with honest, backtest-calibrated confidence for F1 **prediction markets**.",
+    ],
+    chips: ["free", "no account needed", "mobile + desktop"],
+    links: [
+      { label: "▸ play podium chasers", href: "https://podium.acb-apps.com" },
+    ],
+    rightHeading: "// the receipts",
+    rows: [
+      { key: "history", text: "**818 drivers**, 205 constructors, and real results from every F1 season since 1950." },
+      { key: "ratings", text: "a real teammate-only **Elo** system, validated against its source and backtested walk-forward." },
+      { key: "circuits", text: "real track geometry for all 25 circuits on the calendar." },
+      { key: "fantasy", text: "the combination is the only thing invented - the rest is history." },
+    ],
+    pull: "**Not a betting app** - predictions and prediction markets only. The game is just for fun.",
+  },
+
   origin: {
     eyebrow: "where it all started",
     leftHeading: "// the settings menu, 2007",
@@ -182,6 +206,18 @@ export const copy: Record<string, string> = {
   "hero.kicker": text.hero.kicker,
   "hero.title": accent(text.hero.title, text.hero.titleAccent, "u"),
   "hero.lede": bold(text.hero.lede),
+
+  "podium.eyebrow": text.podium.eyebrow,
+  "podium.heading": text.podium.heading,
+  "podium.tag": text.podium.tag,
+  "podium.sub": bold(text.podium.sub),
+  "podium.featureHeading": text.podium.featureHeading,
+  "podium.featureBody": paras(text.podium.featureBody),
+  "podium.chips": chips(text.podium.chips),
+  "podium.links": links(text.podium.links),
+  "podium.rightHeading": text.podium.rightHeading,
+  "podium.rows": kvRows(text.podium.rows),
+  "podium.pull": bold(text.podium.pull),
 
   "origin.eyebrow": text.origin.eyebrow,
   "origin.leftHeading": text.origin.leftHeading,
