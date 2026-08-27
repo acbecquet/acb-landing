@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ACB</title>
-<meta name="description" content="Charlie Becquet — engineer, physicist, builder. ACB mods (immersive LLM-driven game NPCs), ACB apps (Rapid Reader, FaceBack), and ACB tech (open-source instrument software)." />
+<meta name="description" content="Charlie Becquet — engineer, physicist, builder. ACB mods (immersive LLM-driven game NPCs), ACB apps (Podium Chasers, Rapid Reader, FaceBack), and ACB tech (open-source instrument software)." />
 <link rel="icon" type="image/png" href="/brand/favicon-dark.png" media="(prefers-color-scheme: dark)" />
 <link rel="icon" type="image/png" href="/brand/favicon-light.png" />
 <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
@@ -28,6 +28,7 @@
   <button class="menubtn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">☰</button>
   <div class="navend">
     <nav class="navlinks" id="navMenu">
+      <a href="/#podium">podium chasers</a>
       <a href="/#mods">mods</a>
       <a href="/#apps">apps</a>
       <a href="/#faceback">faceback</a>
@@ -77,6 +78,26 @@
     <div>
       <h3>{{origin.rightHeading}}</h3>
       {{origin.right}}
+    </div>
+  </div>
+</div></section>
+
+<!-- PODIUM CHASERS -->
+<section class="pillar" id="podium"><div class="wrap">
+  <div class="eyebrow"><span class="sq" style="background:var(--apps)"></span> {{podium.eyebrow}}</div>
+  <div class="head"><h2>{{podium.heading}}</h2><span class="tag">{{podium.tag}}</span></div>
+  <p class="sub">{{podium.sub}}</p>
+  <div class="feature">
+    <div class="left">
+      <h4>{{podium.featureHeading}}</h4>
+      {{podium.featureBody}}
+      <div class="chips">{{podium.chips}}</div>
+      <div class="linkrow">{{podium.links}}</div>
+    </div>
+    <div class="right">
+      <h3 class="mono" style="margin:0 0 14px;font-size:13px;color:var(--faint)">{{podium.rightHeading}}</h3>
+      <div class="kv">{{podium.rows}}</div>
+      <p class="pull" style="font-size:17px;margin:14px 0 0">{{podium.pull}}</p>
     </div>
   </div>
 </div></section>

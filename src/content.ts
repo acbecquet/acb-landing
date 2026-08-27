@@ -36,6 +36,29 @@ const text = {
     ],
   },
 
+  podium: {
+    eyebrow: "ACB · apps",
+    heading: "Podium Chasers",
+    tag: "new · fantasy F1 game",
+    sub: "A fantasy F1 game built on F1 history. Spin your team, pick your driver, and see if you can beat out the best to a perfect season.",
+    featureHeading: "Simulated races, built on a cutting-edge ELO model",
+    featureBody: [
+      "Spin an era and a team, pick two drivers at their career peaks, and watch a full season play out. Create an account to collect badges and earn progression.",
+      "Under the hood sits a serious prediction engine: a teammate-only **Elo rating** for every driver since 1950, plus Monte Carlo race and season simulation, producing predictions with honest, backtest-calibrated confidence. The model is constantly updating and learning from Formula 1 news. A **deluxe** option unlocks up-to-date F1 predictions using this model.",
+    ],
+    chips: ["free", "no account needed", "optional premium features", "mobile + desktop"],
+    links: [
+      { label: "▸ play podium chasers", href: "https://podium.acb-apps.com" },
+    ],
+    rightHeading: "// the receipts",
+    rows: [
+      { key: "ratings", text: "a real teammate-only **Elo** system, backtested against real seasons." },
+      { key: "circuits", text: "real track geometry for all circuits on the calendar." },
+      { key: "fantasy", text: "spin your team, make history." },
+    ],
+    pull: "A living model that makes an attempt to predict all outcomes of a Formula 1 season.",
+  },
+
   mods: {
     eyebrow: "ACB · mods",
     heading: "Immersive experiences for the games I love.",
@@ -188,6 +211,18 @@ export const copy: Record<string, string> = {
   "origin.left": `<p class="pull">${bold(text.origin.left[0])}</p>` + text.origin.left.slice(1).map((p) => `<p>${bold(p)}</p>`).join(""),
   "origin.rightHeading": text.origin.rightHeading,
   "origin.right": paras(text.origin.right),
+
+  "podium.eyebrow": text.podium.eyebrow,
+  "podium.heading": text.podium.heading,
+  "podium.tag": text.podium.tag,
+  "podium.sub": bold(text.podium.sub),
+  "podium.featureHeading": text.podium.featureHeading,
+  "podium.featureBody": paras(text.podium.featureBody),
+  "podium.chips": chips(text.podium.chips),
+  "podium.links": links(text.podium.links),
+  "podium.rightHeading": text.podium.rightHeading,
+  "podium.rows": kvRows(text.podium.rows),
+  "podium.pull": bold(text.podium.pull),
 
   "mods.eyebrow": text.mods.eyebrow,
   "mods.heading": text.mods.heading,
