@@ -40,7 +40,7 @@ const text = {
     eyebrow: "ACB · apps",
     heading: "Podium Chasers",
     tag: "new · fantasy F1 game",
-    sub: "A fantasy F1 game built on F1 history. Spin the team and era, and pick your driver to see if you can beat out the best to a perfect season.",
+    sub: "A fantasy F1 game built on F1 history. Spin your team, pick your driver, and see if you can beat out the best to a perfect season.",
     featureHeading: "Simulated races, built on a cutting-edge ELO model",
     featureBody: [
       "Spin an era and a team, pick two drivers at their career peaks, and watch a full season play out. Create an account to collect badges and a public username.",
