@@ -40,13 +40,13 @@ const text = {
     eyebrow: "ACB · apps",
     heading: "Podium Chasers",
     tag: "new · fantasy F1 game",
-    sub: "A fantasy F1 game built on all of Formula 1 history. Spin up a team from any era, race a **simulated season** against a real field, and chase the leaderboard.",
-    featureHeading: "Every number on the page is real.",
+    sub: "A fantasy F1 game built on F1 history. Spin the team and era, and pick your driver to see if you can beat out the best to a perfect season.",
+    featureHeading: "Simulated races, built on a cutting-edge ELO model",
     featureBody: [
-      "Spin an era and a team, pick two drivers at their **career peaks**, and watch a full season play out. The simulation is deterministic - the same lineup always produces the same season - so leaderboard scores are server-verified and unfakeable. Sign in with an email code (no passwords, ever) to collect badges and a public username.",
-      "Underneath sits a serious prediction engine: a teammate-only **Elo rating** for every driver since 1950, plus Monte Carlo race and season simulation, producing predictions with honest, backtest-calibrated confidence. A **deluxe** option unlocks up-to-date F1 predictions using the model.",
+      "Spin an era and a team, pick two drivers at their career peaks, and watch a full season play out. Create an account to collect badges and a public username.",
+      "Under the hood sits a serious prediction engine: a teammate-only **Elo rating** for every driver since 1950, plus Monte Carlo race and season simulation, producing predictions with honest, backtest-calibrated confidence. The model is constantly updating and learning from Formula 1 news. A **deluxe** option unlocks up-to-date F1 predictions using this model.",
     ],
-    chips: ["free", "no account needed", "mobile + desktop"],
+    chips: ["free", "no account needed", "optional premium features", "mobile + desktop"],
     links: [
       { label: "▸ play podium chasers", href: "https://podium.acb-apps.com" },
     ],
@@ -56,7 +56,7 @@ const text = {
       { key: "circuits", text: "real track geometry for all circuits on the calendar." },
       { key: "fantasy", text: "spin your team, make history." },
     ],
-    pull: "A living model that attempts to predict all outcomes of a Formula 1 season.",
+    pull: "A living model that makes an attempt to predict all outcomes of a Formula 1 season.",
   },
 
   mods: {
