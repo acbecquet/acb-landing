@@ -43,7 +43,7 @@ const text = {
     sub: "A fantasy F1 game built on F1 history. Spin your team, pick your driver, and see if you can beat out the best to a perfect season.",
     featureHeading: "Simulated races, built on a cutting-edge ELO model",
     featureBody: [
-      "Spin an era and a team, pick two drivers at their career peaks, and watch a full season play out. Create an account to collect badges and a public username.",
+      "Spin an era and a team, pick two drivers at their career peaks, and watch a full season play out. Create an account to collect badges and earn progression.",
       "Under the hood sits a serious prediction engine: a teammate-only **Elo rating** for every driver since 1950, plus Monte Carlo race and season simulation, producing predictions with honest, backtest-calibrated confidence. The model is constantly updating and learning from Formula 1 news. A **deluxe** option unlocks up-to-date F1 predictions using this model.",
     ],
     chips: ["free", "no account needed", "optional premium features", "mobile + desktop"],
